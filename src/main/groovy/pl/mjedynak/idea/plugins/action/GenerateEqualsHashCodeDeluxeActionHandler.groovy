@@ -1,14 +1,15 @@
 package pl.mjedynak.idea.plugins.action
 
-import com.intellij.openapi.actionSystem.DataContext
-import com.intellij.openapi.actionSystem.DataKeys
-import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler
-import com.intellij.openapi.project.Project
+import com.intellij.codeInsight.generation.ClassMember
+import com.intellij.codeInsight.generation.GenerateEqualsHandler
+import com.intellij.codeInsight.generation.GenerationInfo
+import com.intellij.codeInsight.generation.OverrideImplementUtil
+import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiClass
+import com.intellij.util.IncorrectOperationException
 import pl.mjedynak.idea.plugins.psi.PsiHelper
 
-class GenerateEqualsHashCodeDeluxeActionHandler extends EditorActionHandler {
+class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateEqualsHandler {
 
     private PsiHelper psiHelper
 
@@ -16,13 +17,12 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends EditorActionHandler {
         this.psiHelper = psiHelper
     }
 
-
-
     @Override
-    void execute(Editor editor, DataContext dataContext) {
-        Project project = dataContext.getData(DataKeys.PROJECT.getName());
-        PsiClass psiClass = psiHelper.getPsiClassFromEditor(editor, project)
-        println psiClass.getAllFields()
+    protected List<? extends GenerationInfo> generateMemberPrototypes(PsiClass psiClass, ClassMember[] originalMembers) throws IncorrectOperationException {
 
+        def factory = JavaPsiFacade.getInstance(psiClass.project).getElementFactory()
+        def method = factory.createMethodFromText("public void generatedMethod() { }", psiClass.allFields[0])
+        def list = Collections.singletonList(method)
+        OverrideImplementUtil.convert2GenerationInfos(list)
     }
 }

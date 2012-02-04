@@ -1,11 +1,11 @@
 package pl.mjedynak.idea.plugins.action
 
-import com.intellij.openapi.editor.actionSystem.EditorAction
+import com.intellij.codeInsight.generation.actions.BaseGenerateAction
 import org.picocontainer.MutablePicoContainer
 import org.picocontainer.defaults.DefaultPicoContainer
 import pl.mjedynak.idea.plugins.psi.PsiHelper
 
-class GenerateEqualsHashCodeDeluxeAction extends EditorAction {
+class GenerateEqualsHashCodeDeluxeAction extends BaseGenerateAction {
 
     private static MutablePicoContainer picoContainer = new DefaultPicoContainer()
 
