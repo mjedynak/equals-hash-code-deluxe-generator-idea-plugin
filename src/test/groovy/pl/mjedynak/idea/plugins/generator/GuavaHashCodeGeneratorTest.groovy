@@ -25,7 +25,7 @@ class GuavaHashCodeGeneratorTest extends Specification {
     def "creates hashCode method for one field"() {
         String fieldName = 'field'
         psiField.name >> fieldName
-        elementFactory.createMethodFromText("public int hashCode() {return Objects.hashCode(field);}", null, LanguageLevel.JDK_1_6) >> psiMethod
+        elementFactory.createMethodFromText("@Override public int hashCode() {return Objects.hashCode(field);}", null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
         def result = hashCodeGenerator.hashCodeMethod([psiField])
@@ -39,7 +39,7 @@ class GuavaHashCodeGeneratorTest extends Specification {
         String field2Name = 'anotherField'
         psiField.name >> fieldName
         psiField2.name >> field2Name
-        elementFactory.createMethodFromText("public int hashCode() {return Objects.hashCode(field,anotherField);}", null, LanguageLevel.JDK_1_6) >> psiMethod
+        elementFactory.createMethodFromText("@Override public int hashCode() {return Objects.hashCode(field,anotherField);}", null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
         def result = hashCodeGenerator.hashCodeMethod([psiField, psiField2])
