@@ -1,0 +1,32 @@
+<idea-plugin version="2">
+  <name>Equals / HashCode Deluxe Generator</name>
+  <description>
+      <![CDATA[
+      Generates equals() and hashCode() using Guava library or Objects class from Java 7</description>
+      Usage:
+      <ul>
+          <li>ALT + INSERT -> equals() and hashCode() deluxe (inside java editor).</li>
+      </ul>
+      ]]>
+    </description>
+  <version>1.0.0-SNAPSHOT</version>
+    <vendor email="m.jedynak [at] gmail.com">Michal Jedynak
+    </vendor>
+  <idea-version since-build="111.69"/>
+
+  <application-components>
+  </application-components>
+
+  <project-components>
+  </project-components>
+
+  <actions>
+      <action id="GenerateEqualsHashCodeDeluxe" class="pl.mjedynak.idea.plugins.GenerateEqualsHashCodeDeluxeAction"
+              text="equals() and hashCode() deluxe" description="Generate equals() and hashCode() methods">
+          <add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="JavaGenerateGroup1" />
+      </action>
+  </actions>
+
+  <extensions defaultExtensionNs="com.intellij">
+  </extensions>
+</idea-plugin>

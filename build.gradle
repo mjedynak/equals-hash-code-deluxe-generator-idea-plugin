@@ -1,0 +1,26 @@
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply from: 'idea.gradle'
+
+// --- properties ---
+ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 11.0'
+ideaJdk = 'IDEA IC-111.167'
+sourceCompatibility = 1.6
+// --- properties ---
+
+// hack for gradle bug http://issues.gradle.org/browse/GRADLE-1190
+sourceSets.main.java.srcDirs = []
+sourceSets.main.groovy.srcDir 'src/main/java'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    compile fileTree(dir: ideaInstallationPath + '/lib', include: '*.jar')
+    testCompile "org.spockframework:spock-core:0.5-groovy-1.7"
+    groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.3'
+}
+
+metaInf << files('/META-INF/plugin.xml')
