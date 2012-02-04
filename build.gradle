@@ -20,7 +20,7 @@ repositories {
 dependencies {
     compile fileTree(dir: ideaInstallationPath + '/lib', include: '*.jar')
     testCompile "org.spockframework:spock-core:0.5-groovy-1.7"
-    groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.3'
+    groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: '1.7.3'
 }
 
 metaInf << files('/META-INF/plugin.xml')
