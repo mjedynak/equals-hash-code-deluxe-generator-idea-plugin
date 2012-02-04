@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins
+package pl.mjedynak.idea.plugins.action
 
 import com.intellij.openapi.editor.actionSystem.EditorAction
 import org.picocontainer.MutablePicoContainer

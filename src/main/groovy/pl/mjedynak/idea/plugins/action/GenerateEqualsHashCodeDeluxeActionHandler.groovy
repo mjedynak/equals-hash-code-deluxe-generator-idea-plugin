@@ -1,4 +1,4 @@
-package pl.mjedynak.idea.plugins
+package pl.mjedynak.idea.plugins.action
 
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.DataKeys

@@ -5,7 +5,7 @@
       Generates equals() and hashCode() using Guava library or Objects class from Java 7</description>
       Usage:
       <ul>
-          <li>ALT + INSERT -> equals() and hashCode() deluxe (inside java editor).</li>
+          <li>ALT + INSERT -> equals() and hashCode() deluxe (inside Java Editor).</li>
       </ul>
       ]]>
     </description>
@@ -21,7 +21,7 @@
   </project-components>
 
   <actions>
-      <action id="GenerateEqualsHashCodeDeluxe" class="pl.mjedynak.idea.plugins.GenerateEqualsHashCodeDeluxeAction"
+      <action id="GenerateEqualsHashCodeDeluxe" class="pl.mjedynak.idea.plugins.action.GenerateEqualsHashCodeDeluxeAction"
               text="equals() and hashCode() deluxe" description="Generate equals() and hashCode() methods">
           <add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="JavaGenerateGroup1" />
       </action>
