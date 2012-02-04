@@ -4,29 +4,25 @@ import com.intellij.codeInsight.generation.ClassMember
 import com.intellij.codeInsight.generation.GenerateEqualsHandler
 import com.intellij.codeInsight.generation.GenerationInfo
 import com.intellij.codeInsight.generation.OverrideImplementUtil
-import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiClass
 import com.intellij.util.IncorrectOperationException
 import java.lang.reflect.Field
-import pl.mjedynak.idea.plugins.psi.PsiHelper
+import pl.mjedynak.idea.plugins.generator.GuavaHashCodeGenerator
 
 class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateEqualsHandler {
 
-    private PsiHelper psiHelper
+    GuavaHashCodeGenerator guavaHashCodeGenerator
 
-    GenerateEqualsHashCodeDeluxeActionHandler(PsiHelper psiHelper) {
-        this.psiHelper = psiHelper
+    GenerateEqualsHashCodeDeluxeActionHandler(GuavaHashCodeGenerator guavaHashCodeGenerator) {
+        this.guavaHashCodeGenerator = guavaHashCodeGenerator
     }
+
 
     @Override
     protected List<? extends GenerationInfo> generateMemberPrototypes(PsiClass psiClass, ClassMember[] originalMembers) throws IncorrectOperationException {
 
-        def factory = JavaPsiFacade.getInstance(psiClass.project).getElementFactory()
+        def method = guavaHashCodeGenerator.hashCodeMethod(getFieldValue('myHashCodeFields') as List)
 
-//        def method = factory.createMethodFromText("public void generatedMethod() { }", null)
-          def methodText = "public int hashCode() {return Objects.hashCode(${getFieldValue('myHashCodeFields')});}"
-
-        def method = factory.createMethodFromText(methodText, null)
         def list = Collections.singletonList(method)
         OverrideImplementUtil.convert2GenerationInfos(list)
     }

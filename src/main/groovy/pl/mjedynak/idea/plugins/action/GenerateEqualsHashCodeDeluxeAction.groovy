@@ -3,7 +3,7 @@ package pl.mjedynak.idea.plugins.action
 import com.intellij.codeInsight.generation.actions.BaseGenerateAction
 import org.picocontainer.MutablePicoContainer
 import org.picocontainer.defaults.DefaultPicoContainer
-import pl.mjedynak.idea.plugins.psi.PsiHelper
+import pl.mjedynak.idea.plugins.generator.GuavaHashCodeGenerator
 
 class GenerateEqualsHashCodeDeluxeAction extends BaseGenerateAction {
 
@@ -12,7 +12,7 @@ class GenerateEqualsHashCodeDeluxeAction extends BaseGenerateAction {
     private static GenerateEqualsHashCodeDeluxeActionHandler handler
 
     static {
-        picoContainer.registerComponentImplementation(PsiHelper)
+        picoContainer.registerComponentImplementation(GuavaHashCodeGenerator)
         picoContainer.registerComponentImplementation(GenerateEqualsHashCodeDeluxeActionHandler)
         handler = picoContainer.getComponentInstanceOfType(GenerateEqualsHashCodeDeluxeActionHandler)
     }
