@@ -12,11 +12,8 @@ class PsiHelper {
     PsiClass getPsiClassFromEditor(Editor editor, Project project) {
         PsiClass psiClass = null
         PsiFile psiFile = getPsiFile(editor, project)
-        if (psiFile instanceof PsiClassOwner) {
-            PsiClass[] classes = ((PsiClassOwner) psiFile).classes
-            if (classes.length == 1) {
-                psiClass = classes[0]
-            }
+        if (psiFile instanceof PsiClassOwner && psiFile.classes.length == 1) {
+            psiClass = psiFile.classes[0]
         }
         psiClass
     }

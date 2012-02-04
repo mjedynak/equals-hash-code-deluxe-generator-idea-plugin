@@ -20,7 +20,7 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends EditorActionHandler {
 
     @Override
     void execute(Editor editor, DataContext dataContext) {
-        Project project = (Project) dataContext.getData(DataKeys.PROJECT.getName());
+        Project project = dataContext.getData(DataKeys.PROJECT.getName());
         PsiClass psiClass = psiHelper.getPsiClassFromEditor(editor, project)
         println psiClass.getAllFields()
 
