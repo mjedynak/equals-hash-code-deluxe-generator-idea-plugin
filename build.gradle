@@ -8,10 +8,6 @@ ideaJdk = 'IDEA IC-111.167'
 sourceCompatibility = 1.6
 // --- properties ---
 
-// hack for gradle bug http://issues.gradle.org/browse/GRADLE-1190
-sourceSets.main.java.srcDirs = []
-sourceSets.main.groovy.srcDir 'src/main/java'
-
 repositories {
     mavenCentral()
     mavenLocal()
