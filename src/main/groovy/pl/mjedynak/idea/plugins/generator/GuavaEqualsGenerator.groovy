@@ -19,7 +19,7 @@ class GuavaEqualsGenerator {
             methodText << " if (obj == null) {return false;}"
             methodText << " if (getClass() != obj.getClass()) {return false;}"
             methodText << " final ${psiClass.text} other = (${psiClass.text}) obj;"
-            methodText << " return Objects.equals(${equalsPsiFields[0].name});}"
+            methodText << " return Objects.equals(this.${equalsPsiFields[0].name}, other.${equalsPsiFields[0].name});}"
             factory.createMethodFromText(methodText.toString(), null, LanguageLevel.JDK_1_6)
         }
     }

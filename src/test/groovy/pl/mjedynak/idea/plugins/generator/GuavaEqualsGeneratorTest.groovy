@@ -31,7 +31,7 @@ class GuavaEqualsGeneratorTest extends Specification {
         psiClass.getText() >> type
 
         elementFactory.createMethodFromText("@Override public boolean equals(Object obj) { if (obj == null) {return false;} " +
-                "if (getClass() != obj.getClass()) {return false;} final String other = (String) obj; return Objects.equals(field);}", null, LanguageLevel.JDK_1_6) >> psiMethod
+                "if (getClass() != obj.getClass()) {return false;} final String other = (String) obj; return Objects.equals(this.field, other.field);}", null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
         def result = equalsGenerator.equalsMethod([psiField], psiClass)
