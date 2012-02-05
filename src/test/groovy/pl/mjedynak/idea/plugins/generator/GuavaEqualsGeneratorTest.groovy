@@ -8,9 +8,9 @@ import com.intellij.psi.impl.PsiElementFactoryImpl
 import com.intellij.psi.impl.source.PsiMethodImpl
 import spock.lang.Specification
 
-class GuavaHashCodeGeneratorTest extends Specification {
+class GuavaEqualsGeneratorTest extends Specification {
 
-    GuavaHashCodeGenerator hashCodeGenerator = new GuavaHashCodeGenerator()
+    GuavaEqualsGenerator equalsGenerator = new GuavaEqualsGenerator()
     PsiField psiField = Mock()
     PsiField psiField2 = Mock()
     JavaPsiFacade javaPsiFacade = Mock()
@@ -22,10 +22,11 @@ class GuavaHashCodeGeneratorTest extends Specification {
         javaPsiFacade.getElementFactory() >> elementFactory
     }
 
-    def "creates hashCode method for one field"() {
+    def "creates equals method for one field"() {
         String fieldName = 'field'
         psiField.name >> fieldName
-        elementFactory.createMethodFromText("@Override public int hashCode() {return Objects.hashCode(field);}", null, LanguageLevel.JDK_1_6) >> psiMethod
+        elementFactory.createMethodFromText("@Override public boolean equals(Object obj)        {if (obj == null) {return false}};"
+      , null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
         def result = hashCodeGenerator.hashCodeMethod([psiField])
@@ -34,25 +35,13 @@ class GuavaHashCodeGeneratorTest extends Specification {
         result == psiMethod
     }
 
-    def "creates hashCode method for two fields"() {
-        String fieldName = 'field'
-        String field2Name = 'anotherField'
-        psiField.name >> fieldName
-        psiField2.name >> field2Name
-        elementFactory.createMethodFromText("@Override public int hashCode() {return Objects.hashCode(field,anotherField);}", null, LanguageLevel.JDK_1_6) >> psiMethod
-
-        when:
-        def result = hashCodeGenerator.hashCodeMethod([psiField, psiField2])
-
-        then:
-        result == psiMethod
-    }
-
     def "returns null if list is empty"() {
         when:
-        def result = hashCodeGenerator.hashCodeMethod([])
+        def result = equalsGenerator.equalsMethod([])
 
         then:
         result == null
     }
+
+
 }
