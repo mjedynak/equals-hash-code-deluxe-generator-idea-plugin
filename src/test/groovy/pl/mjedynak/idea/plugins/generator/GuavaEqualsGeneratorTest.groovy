@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.pom.java.LanguageLevel
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiField
+import com.intellij.psi.PsiType
 import com.intellij.psi.impl.PsiElementFactoryImpl
 import com.intellij.psi.impl.source.PsiMethodImpl
 import spock.lang.Specification
@@ -23,13 +24,17 @@ class GuavaEqualsGeneratorTest extends Specification {
     }
 
     def "creates equals method for one field"() {
+        String typeText = 'String'
         String fieldName = 'field'
         psiField.name >> fieldName
-        elementFactory.createMethodFromText("@Override public boolean equals(Object obj)        {if (obj == null) {return false}};"
-      , null, LanguageLevel.JDK_1_6) >> psiMethod
+        PsiType type = Mock()
+        psiField.type >> type
+        type.presentableText >> typeText
+        elementFactory.createMethodFromText("@Override public boolean equals(Object obj) {if (obj == null) {return false;} " +
+                "if (getClass() != obj.getClass()) {return false;} final String other = (String) obj; return Objects.equals(field);}", null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
-        def result = hashCodeGenerator.hashCodeMethod([psiField])
+        def result = equalsGenerator.equalsMethod([psiField])
 
         then:
         result == psiMethod
@@ -42,6 +47,11 @@ class GuavaEqualsGeneratorTest extends Specification {
         then:
         result == null
     }
+
+
+
+
+
 
 
 }
