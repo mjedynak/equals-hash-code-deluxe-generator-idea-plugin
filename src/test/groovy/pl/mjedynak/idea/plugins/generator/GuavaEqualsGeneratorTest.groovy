@@ -3,8 +3,8 @@ package pl.mjedynak.idea.plugins.generator
 import com.intellij.openapi.project.Project
 import com.intellij.pom.java.LanguageLevel
 import com.intellij.psi.JavaPsiFacade
+import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiField
-import com.intellij.psi.PsiType
 import com.intellij.psi.impl.PsiElementFactoryImpl
 import com.intellij.psi.impl.source.PsiMethodImpl
 import spock.lang.Specification
@@ -17,6 +17,7 @@ class GuavaEqualsGeneratorTest extends Specification {
     JavaPsiFacade javaPsiFacade = Mock()
     PsiElementFactoryImpl elementFactory = Mock()
     PsiMethodImpl psiMethod = Mock()
+    PsiClass psiClass = Mock()
 
     def setup() {
         JavaPsiFacade.metaClass.'static'.getInstance = { Project project -> javaPsiFacade}
@@ -24,17 +25,16 @@ class GuavaEqualsGeneratorTest extends Specification {
     }
 
     def "creates equals method for one field"() {
-        String typeText = 'String'
+        String type = 'String'
         String fieldName = 'field'
         psiField.name >> fieldName
-        PsiType type = Mock()
-        psiField.type >> type
-        type.presentableText >> typeText
-        elementFactory.createMethodFromText("@Override public boolean equals(Object obj) {if (obj == null) {return false;} " +
+        psiClass.getText() >> type
+
+        elementFactory.createMethodFromText("@Override public boolean equals(Object obj) { if (obj == null) {return false;} " +
                 "if (getClass() != obj.getClass()) {return false;} final String other = (String) obj; return Objects.equals(field);}", null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
-        def result = equalsGenerator.equalsMethod([psiField])
+        def result = equalsGenerator.equalsMethod([psiField], psiClass)
 
         then:
         result == psiMethod
