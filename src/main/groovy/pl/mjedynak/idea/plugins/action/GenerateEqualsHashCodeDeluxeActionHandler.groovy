@@ -8,23 +8,26 @@ import com.intellij.psi.PsiClass
 import com.intellij.util.IncorrectOperationException
 import java.lang.reflect.Field
 import pl.mjedynak.idea.plugins.generator.GuavaHashCodeGenerator
+import pl.mjedynak.idea.plugins.generator.GuavaEqualsGenerator
 
 class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateEqualsHandler {
 
     GuavaHashCodeGenerator guavaHashCodeGenerator
+    GuavaEqualsGenerator guavaEqualsGenerator
 
-    GenerateEqualsHashCodeDeluxeActionHandler(GuavaHashCodeGenerator guavaHashCodeGenerator) {
+    GenerateEqualsHashCodeDeluxeActionHandler(GuavaHashCodeGenerator guavaHashCodeGenerator, GuavaEqualsGenerator guavaEqualsGenerator) {
         this.guavaHashCodeGenerator = guavaHashCodeGenerator
+        this.guavaEqualsGenerator = guavaEqualsGenerator
     }
 
 
     @Override
     protected List<? extends GenerationInfo> generateMemberPrototypes(PsiClass psiClass, ClassMember[] originalMembers) throws IncorrectOperationException {
 
-        def method = guavaHashCodeGenerator.hashCodeMethod(getFieldValue('myHashCodeFields') as List)
+        def hashCodeMethod = guavaHashCodeGenerator.hashCodeMethod(getFieldValue('myHashCodeFields') as List)
+        def equalsMethod = guavaEqualsGenerator.equalsMethod(getFieldValue('myEqualsFields') as List, psiClass)
 
-        def list = Collections.singletonList(method)
-        OverrideImplementUtil.convert2GenerationInfos(list)
+        OverrideImplementUtil.convert2GenerationInfos([hashCodeMethod, equalsMethod])
     }
 
     def getFieldValue = {  fieldName ->

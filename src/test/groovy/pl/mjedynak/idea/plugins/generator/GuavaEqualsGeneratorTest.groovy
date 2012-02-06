@@ -18,20 +18,20 @@ class GuavaEqualsGeneratorTest extends Specification {
     PsiElementFactoryImpl elementFactory = Mock()
     PsiMethodImpl psiMethod = Mock()
     PsiClass psiClass = Mock()
+    String type = 'String'
 
     def setup() {
         JavaPsiFacade.metaClass.'static'.getInstance = { Project project -> javaPsiFacade}
         javaPsiFacade.getElementFactory() >> elementFactory
+        psiClass.getName() >> type
     }
 
     def "creates equals method for one field"() {
-        String type = 'String'
         String fieldName = 'field'
         psiField.name >> fieldName
-        psiClass.getText() >> type
 
         elementFactory.createMethodFromText("@Override public boolean equals(Object obj) { if (obj == null) {return false;} " +
-                "if (getClass() != obj.getClass()) {return false;} final String other = (String) obj; return Objects.equals(this.field, other.field);}", null, LanguageLevel.JDK_1_6) >> psiMethod
+                "if (getClass() != obj.getClass()) {return false;} final String other = (String) obj; return Objects.equal(this.field, other.field);}", null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
         def result = equalsGenerator.equalsMethod([psiField], psiClass)
@@ -40,18 +40,31 @@ class GuavaEqualsGeneratorTest extends Specification {
         result == psiMethod
     }
 
+    def "creates equals method for two field"() {
+        String fieldName = 'field'
+        String fieldName2 = 'anotherField'
+        psiField.name >> fieldName
+        psiField2.name >> fieldName2
+
+        elementFactory.createMethodFromText("@Override public boolean equals(Object obj) { if (obj == null) {return false;} " +
+                "if (getClass() != obj.getClass()) {return false;} " +
+                "final String other = (String) obj; return Objects.equal(this.field, other.field) && Objects.equal(this.anotherField, other.anotherField);}",
+                null, LanguageLevel.JDK_1_6) >> psiMethod
+
+        when:
+        def result = equalsGenerator.equalsMethod([psiField, psiField2], psiClass)
+
+        then:
+        result == psiMethod
+    }
+
     def "returns null if list is empty"() {
         when:
-        def result = equalsGenerator.equalsMethod([])
+        def result = equalsGenerator.equalsMethod([], psiClass)
 
         then:
         result == null
     }
-
-
-
-
-
 
 
 }

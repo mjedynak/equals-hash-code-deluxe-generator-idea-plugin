@@ -13,13 +13,19 @@ class GuavaEqualsGenerator {
     PsiMethod equalsMethod(@NotNull List<PsiField> equalsPsiFields, PsiClass psiClass) {
         if (!equalsPsiFields.isEmpty()) {
             PsiElementFactory factory = getFactory(equalsPsiFields[0])
-//            def fieldsString = equalsPsiFields.collect {it.name}.join(",")
             StringBuilder methodText = new StringBuilder()
             methodText << "@Override public boolean equals(Object obj) {"
             methodText << " if (obj == null) {return false;}"
             methodText << " if (getClass() != obj.getClass()) {return false;}"
-            methodText << " final ${psiClass.text} other = (${psiClass.text}) obj;"
-            methodText << " return Objects.equals(this.${equalsPsiFields[0].name}, other.${equalsPsiFields[0].name});}"
+            methodText << " final ${psiClass.name} other = (${psiClass.name}) obj;"
+            methodText << " return "
+            equalsPsiFields.eachWithIndex { field, index ->
+                methodText <<  "Objects.equal(this.${field.name}, other.${field.name})"
+                if (index < equalsPsiFields.size() - 1) {
+                    methodText << " && "
+                }
+            }
+            methodText << ";}"
             factory.createMethodFromText(methodText.toString(), null, LanguageLevel.JDK_1_6)
         }
     }
