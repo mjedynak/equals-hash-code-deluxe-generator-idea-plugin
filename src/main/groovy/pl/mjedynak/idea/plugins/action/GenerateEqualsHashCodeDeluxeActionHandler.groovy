@@ -20,8 +20,8 @@ import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiModifier
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.IncorrectOperationException
-import pl.mjedynak.idea.plugins.generator.GuavaEqualsGenerator
-import pl.mjedynak.idea.plugins.generator.GuavaHashCodeGenerator
+import pl.mjedynak.idea.plugins.generator.EqualsGenerator
+import pl.mjedynak.idea.plugins.generator.HashCodeGenerator
 import pl.mjedynak.idea.plugins.wizard.GenerateEqualsHashCodeDeluxeWizard
 
 class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBase {
@@ -35,11 +35,11 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
     PsiField[] myEqualsFields = null
     PsiField[] myHashCodeFields = null
 
-    GuavaHashCodeGenerator guavaHashCodeGenerator
-    GuavaEqualsGenerator guavaEqualsGenerator
+    HashCodeGenerator guavaHashCodeGenerator
+    EqualsGenerator guavaEqualsGenerator
 
 
-    GenerateEqualsHashCodeDeluxeActionHandler(GuavaHashCodeGenerator guavaHashCodeGenerator, GuavaEqualsGenerator guavaEqualsGenerator) {
+    GenerateEqualsHashCodeDeluxeActionHandler(HashCodeGenerator guavaHashCodeGenerator, EqualsGenerator guavaEqualsGenerator) {
         super("")
         this.guavaHashCodeGenerator = guavaHashCodeGenerator
         this.guavaEqualsGenerator = guavaEqualsGenerator

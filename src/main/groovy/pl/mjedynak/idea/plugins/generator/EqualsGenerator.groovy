@@ -8,7 +8,7 @@ import com.intellij.psi.PsiField
 import com.intellij.psi.PsiMethod
 import org.jetbrains.annotations.NotNull
 
-class GuavaEqualsGenerator {
+class EqualsGenerator {
 
     PsiMethod equalsMethod(@NotNull List<PsiField> equalsPsiFields, PsiClass psiClass) {
         if (!equalsPsiFields.isEmpty()) {

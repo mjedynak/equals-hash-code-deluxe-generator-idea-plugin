@@ -3,8 +3,8 @@ package pl.mjedynak.idea.plugins.action
 import com.intellij.codeInsight.generation.actions.BaseGenerateAction
 import org.picocontainer.MutablePicoContainer
 import org.picocontainer.defaults.DefaultPicoContainer
-import pl.mjedynak.idea.plugins.generator.GuavaHashCodeGenerator
-import pl.mjedynak.idea.plugins.generator.GuavaEqualsGenerator
+import pl.mjedynak.idea.plugins.generator.EqualsGenerator
+import pl.mjedynak.idea.plugins.generator.HashCodeGenerator
 
 class GenerateEqualsHashCodeDeluxeAction extends BaseGenerateAction {
 
@@ -13,8 +13,8 @@ class GenerateEqualsHashCodeDeluxeAction extends BaseGenerateAction {
     private static GenerateEqualsHashCodeDeluxeActionHandler handler
 
     static {
-        picoContainer.registerComponentImplementation(GuavaHashCodeGenerator)
-        picoContainer.registerComponentImplementation(GuavaEqualsGenerator)
+        picoContainer.registerComponentImplementation(HashCodeGenerator)
+        picoContainer.registerComponentImplementation(EqualsGenerator)
         picoContainer.registerComponentImplementation(GenerateEqualsHashCodeDeluxeActionHandler)
         handler = picoContainer.getComponentInstanceOfType(GenerateEqualsHashCodeDeluxeActionHandler)
     }

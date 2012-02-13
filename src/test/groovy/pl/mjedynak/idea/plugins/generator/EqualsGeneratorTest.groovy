@@ -9,9 +9,9 @@ import com.intellij.psi.impl.PsiElementFactoryImpl
 import com.intellij.psi.impl.source.PsiMethodImpl
 import spock.lang.Specification
 
-class GuavaEqualsGeneratorTest extends Specification {
+class EqualsGeneratorTest extends Specification {
 
-    GuavaEqualsGenerator equalsGenerator = new GuavaEqualsGenerator()
+    EqualsGenerator equalsGenerator = new EqualsGenerator()
     PsiField psiField = Mock()
     PsiField psiField2 = Mock()
     JavaPsiFacade javaPsiFacade = Mock()
