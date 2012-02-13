@@ -9,11 +9,11 @@ import org.jetbrains.annotations.NotNull
 
 class HashCodeGenerator {
 
-    PsiMethod hashCodeMethod(@NotNull List<PsiField> hashCodePsiFields) {
+    PsiMethod hashCodeMethod(@NotNull List<PsiField> hashCodePsiFields, String hashCodeMethodName) {
         if (!hashCodePsiFields.isEmpty()) {
             PsiElementFactory factory = getFactory(hashCodePsiFields[0])
             def fieldsString = hashCodePsiFields.collect {it.name}.join(",")
-            def methodText = "@Override public int hashCode() {return Objects.hashCode(${fieldsString});}"
+            def methodText = "@Override public int hashCode() {return Objects.${hashCodeMethodName}(${fieldsString});}"
             factory.createMethodFromText(methodText, null, LanguageLevel.JDK_1_6)
         }
     }

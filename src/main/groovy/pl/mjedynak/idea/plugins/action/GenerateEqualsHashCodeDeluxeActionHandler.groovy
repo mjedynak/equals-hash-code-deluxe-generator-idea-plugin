@@ -19,6 +19,7 @@ import com.intellij.psi.PsiField
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiModifier
 import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.util.PsiUtil
 import com.intellij.util.IncorrectOperationException
 import pl.mjedynak.idea.plugins.generator.EqualsGenerator
 import pl.mjedynak.idea.plugins.generator.HashCodeGenerator
@@ -31,7 +32,11 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
     static final String TITLE = "generate.equals.and.hashcode.already.defined.title"
 
     static final PsiElementClassMember[] DUMMY_RESULT = new PsiElementClassMember[1] //cannot return empty array, but this result won't be used anyway
+
     static final String GUAVA_EQUALS_METHOD = 'equal'
+    static final String JAVA_7_EQUALS_METHOD = 'equals'
+    static final String GUAVA_HASH_CODE_METHOD = 'hashCode'
+    static final String JAVA_7_HASH_CODE_METHOD = 'hash'
 
     PsiField[] myEqualsFields = null
     PsiField[] myHashCodeFields = null
@@ -49,10 +54,20 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
     @Override
     protected List<? extends GenerationInfo> generateMemberPrototypes(PsiClass psiClass, ClassMember[] originalMembers) throws IncorrectOperationException {
 
-        def hashCodeMethod = guavaHashCodeGenerator.hashCodeMethod(myHashCodeFields as List)
-        def equalsMethod = guavaEqualsGenerator.equalsMethod(myEqualsFields as List, psiClass, GUAVA_EQUALS_METHOD)
+        String equalsMethodName = chooseEqualsMethodName(psiClass)
+        String hashCodeMethodName = chooseHashCodeMethodName(psiClass)
+        def hashCodeMethod = guavaHashCodeGenerator.hashCodeMethod(myHashCodeFields as List, hashCodeMethodName)
+        def equalsMethod = guavaEqualsGenerator.equalsMethod(myEqualsFields as List, psiClass, equalsMethodName)
 
         OverrideImplementUtil.convert2GenerationInfos([hashCodeMethod, equalsMethod])
+    }
+
+    String chooseEqualsMethodName(PsiClass psiClass) {
+        PsiUtil.isLanguageLevel7OrHigher(psiClass) ? JAVA_7_EQUALS_METHOD : GUAVA_EQUALS_METHOD
+    }
+
+    String chooseHashCodeMethodName(PsiClass psiClass) {
+        PsiUtil.isLanguageLevel7OrHigher(psiClass) ? JAVA_7_HASH_CODE_METHOD : GUAVA_HASH_CODE_METHOD
     }
 
 

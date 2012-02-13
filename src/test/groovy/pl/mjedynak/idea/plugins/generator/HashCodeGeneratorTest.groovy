@@ -25,10 +25,11 @@ class HashCodeGeneratorTest extends Specification {
     def "creates hashCode method for one field"() {
         String fieldName = 'field'
         psiField.name >> fieldName
-        elementFactory.createMethodFromText("@Override public int hashCode() {return Objects.hashCode(field);}", null, LanguageLevel.JDK_1_6) >> psiMethod
+        String hashCodeMethodName = 'hash'
+        elementFactory.createMethodFromText("@Override public int hashCode() {return Objects.hash(field);}", null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
-        def result = hashCodeGenerator.hashCodeMethod([psiField])
+        def result = hashCodeGenerator.hashCodeMethod([psiField], hashCodeMethodName)
 
         then:
         result == psiMethod
@@ -39,10 +40,11 @@ class HashCodeGeneratorTest extends Specification {
         String field2Name = 'anotherField'
         psiField.name >> fieldName
         psiField2.name >> field2Name
+        String hashCodeMethodName = 'hashCode'
         elementFactory.createMethodFromText("@Override public int hashCode() {return Objects.hashCode(field,anotherField);}", null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
-        def result = hashCodeGenerator.hashCodeMethod([psiField, psiField2])
+        def result = hashCodeGenerator.hashCodeMethod([psiField, psiField2], hashCodeMethodName)
 
         then:
         result == psiMethod
@@ -50,7 +52,7 @@ class HashCodeGeneratorTest extends Specification {
 
     def "returns null if list is empty"() {
         when:
-        def result = hashCodeGenerator.hashCodeMethod([])
+        def result = hashCodeGenerator.hashCodeMethod([], "anyString")
 
         then:
         result == null
