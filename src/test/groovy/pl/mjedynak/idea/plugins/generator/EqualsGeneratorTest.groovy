@@ -29,12 +29,13 @@ class EqualsGeneratorTest extends Specification {
     def "creates equals method for one field"() {
         String fieldName = 'field'
         psiField.name >> fieldName
+        String equalsMethodName = 'equals'
 
         elementFactory.createMethodFromText("@Override public boolean equals(Object obj) { if (obj == null) {return false;} " +
-                "if (getClass() != obj.getClass()) {return false;} final String other = (String) obj; return Objects.equal(this.field, other.field);}", null, LanguageLevel.JDK_1_6) >> psiMethod
+                "if (getClass() != obj.getClass()) {return false;} final String other = (String) obj; return Objects.equals(this.field, other.field);}", null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
-        def result = equalsGenerator.equalsMethod([psiField], psiClass)
+        def result = equalsGenerator.equalsMethod([psiField], psiClass, equalsMethodName)
 
         then:
         result == psiMethod
@@ -45,6 +46,7 @@ class EqualsGeneratorTest extends Specification {
         String fieldName2 = 'anotherField'
         psiField.name >> fieldName
         psiField2.name >> fieldName2
+        String equalsMethodName = 'equal'
 
         elementFactory.createMethodFromText("@Override public boolean equals(Object obj) { if (obj == null) {return false;} " +
                 "if (getClass() != obj.getClass()) {return false;} " +
@@ -52,7 +54,7 @@ class EqualsGeneratorTest extends Specification {
                 null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
-        def result = equalsGenerator.equalsMethod([psiField, psiField2], psiClass)
+        def result = equalsGenerator.equalsMethod([psiField, psiField2], psiClass, equalsMethodName)
 
         then:
         result == psiMethod
@@ -60,7 +62,7 @@ class EqualsGeneratorTest extends Specification {
 
     def "returns null if list is empty"() {
         when:
-        def result = equalsGenerator.equalsMethod([], psiClass)
+        def result = equalsGenerator.equalsMethod([], psiClass, "anyString")
 
         then:
         result == null

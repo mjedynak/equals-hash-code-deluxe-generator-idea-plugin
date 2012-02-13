@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull
 
 class EqualsGenerator {
 
-    PsiMethod equalsMethod(@NotNull List<PsiField> equalsPsiFields, PsiClass psiClass) {
+    PsiMethod equalsMethod(@NotNull List<PsiField> equalsPsiFields, PsiClass psiClass, String equalsMethodName) {
         if (!equalsPsiFields.isEmpty()) {
             PsiElementFactory factory = getFactory(equalsPsiFields[0])
             StringBuilder methodText = new StringBuilder()
@@ -20,7 +20,7 @@ class EqualsGenerator {
             methodText << " final ${psiClass.name} other = (${psiClass.name}) obj;"
             methodText << " return "
             equalsPsiFields.eachWithIndex { field, index ->
-                methodText <<  "Objects.equal(this.${field.name}, other.${field.name})"
+                methodText <<  "Objects.${equalsMethodName}(this.${field.name}, other.${field.name})"
                 if (index < equalsPsiFields.size() - 1) {
                     methodText << " && "
                 }
