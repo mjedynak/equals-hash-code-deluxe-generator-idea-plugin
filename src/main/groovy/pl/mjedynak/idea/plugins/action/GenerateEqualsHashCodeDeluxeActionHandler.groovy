@@ -31,6 +31,7 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
     static final String TITLE = "generate.equals.and.hashcode.already.defined.title"
 
     static final PsiElementClassMember[] DUMMY_RESULT = new PsiElementClassMember[1] //cannot return empty array, but this result won't be used anyway
+    static final String GUAVA_EQUALS_METHOD = 'equal'
 
     PsiField[] myEqualsFields = null
     PsiField[] myHashCodeFields = null
@@ -49,7 +50,7 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
     protected List<? extends GenerationInfo> generateMemberPrototypes(PsiClass psiClass, ClassMember[] originalMembers) throws IncorrectOperationException {
 
         def hashCodeMethod = guavaHashCodeGenerator.hashCodeMethod(myHashCodeFields as List)
-        def equalsMethod = guavaEqualsGenerator.equalsMethod(myEqualsFields as List, psiClass)
+        def equalsMethod = guavaEqualsGenerator.equalsMethod(myEqualsFields as List, psiClass, GUAVA_EQUALS_METHOD)
 
         OverrideImplementUtil.convert2GenerationInfos([hashCodeMethod, equalsMethod])
     }
