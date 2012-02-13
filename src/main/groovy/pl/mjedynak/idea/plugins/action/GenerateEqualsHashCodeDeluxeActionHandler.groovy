@@ -20,7 +20,6 @@ import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiModifier
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.IncorrectOperationException
-import java.lang.reflect.Field
 import pl.mjedynak.idea.plugins.generator.GuavaEqualsGenerator
 import pl.mjedynak.idea.plugins.generator.GuavaHashCodeGenerator
 import pl.mjedynak.idea.plugins.wizard.GenerateEqualsHashCodeDeluxeWizard
@@ -140,19 +139,4 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
     protected GenerationInfo[] generateMemberPrototypes(PsiClass psiClass, ClassMember classMember) {
         null
     }
-
-    def getParentFieldValue = { object, fieldName ->
-        def fields = object.class.superclass.getDeclaredFields()
-        Field field = fields.find { it.name == fieldName }
-        field.setAccessible(true)
-        field.get(object)
-    }
-
-    def getFieldValue = { object, fieldName ->
-        def fields = object.class.getDeclaredFields()
-        Field field = fields.find { it.name == fieldName }
-        field.setAccessible(true)
-        field.get(object)
-    }
-
 }
