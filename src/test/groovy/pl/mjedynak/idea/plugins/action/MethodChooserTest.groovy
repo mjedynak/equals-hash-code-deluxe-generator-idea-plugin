@@ -19,7 +19,7 @@ class MethodChooserTest extends Specification {
         result == MethodChooser.JAVA_7_EQUALS_METHOD
     }
 
-    def "chooses guava equals method when language level is less than 7"() {
+    def "chooses guava equals method when language level is below 7"() {
         PsiUtil.metaClass.'static'.isLanguageLevel7OrHigher = {PsiClass psiClass -> false}
 
         when:
