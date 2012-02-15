@@ -1,12 +1,20 @@
 apply plugin: 'groovy'
+//apply plugin: 'code-quality'
 apply plugin: 'idea'
 apply from: 'idea.gradle'
+apply from: 'cobertura.gradle'
 
 // --- properties ---
 ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 11.0'
 ideaJdk = 'IDEA IC-111.167'
 sourceCompatibility = 1.6
 // --- properties ---
+
+// --- cobertura ---
+cobertura.dependsOn test
+check.dependsOn cobertura
+// --- cobertura ---
+
 
 repositories {
     mavenCentral()
