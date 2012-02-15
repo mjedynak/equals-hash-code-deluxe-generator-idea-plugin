@@ -15,6 +15,7 @@ class GenerateEqualsHashCodeDeluxeAction extends BaseGenerateAction {
     static {
         picoContainer.registerComponentImplementation(HashCodeGenerator)
         picoContainer.registerComponentImplementation(EqualsGenerator)
+        picoContainer.registerComponentImplementation(MethodChooser)
         picoContainer.registerComponentImplementation(GenerateEqualsHashCodeDeluxeActionHandler)
         handler = picoContainer.getComponentInstanceOfType(GenerateEqualsHashCodeDeluxeActionHandler)
     }

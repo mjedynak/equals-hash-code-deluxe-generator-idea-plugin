@@ -19,7 +19,6 @@ import com.intellij.psi.PsiField
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiModifier
 import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.util.PsiUtil
 import com.intellij.util.IncorrectOperationException
 import pl.mjedynak.idea.plugins.generator.EqualsGenerator
 import pl.mjedynak.idea.plugins.generator.HashCodeGenerator
@@ -33,43 +32,31 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
 
     static final PsiElementClassMember[] DUMMY_RESULT = new PsiElementClassMember[1] //cannot return empty array, but this result won't be used anyway
 
-    static final String GUAVA_EQUALS_METHOD = 'equal'
-    static final String JAVA_7_EQUALS_METHOD = 'equals'
-    static final String GUAVA_HASH_CODE_METHOD = 'hashCode'
-    static final String JAVA_7_HASH_CODE_METHOD = 'hash'
+    HashCodeGenerator guavaHashCodeGenerator
+    EqualsGenerator guavaEqualsGenerator
+    MethodChooser methodChooser
 
     PsiField[] myEqualsFields = null
     PsiField[] myHashCodeFields = null
 
-    HashCodeGenerator guavaHashCodeGenerator
-    EqualsGenerator guavaEqualsGenerator
 
-
-    GenerateEqualsHashCodeDeluxeActionHandler(HashCodeGenerator guavaHashCodeGenerator, EqualsGenerator guavaEqualsGenerator) {
+    GenerateEqualsHashCodeDeluxeActionHandler(HashCodeGenerator guavaHashCodeGenerator, EqualsGenerator guavaEqualsGenerator, MethodChooser methodChooser) {
         super("")
         this.guavaHashCodeGenerator = guavaHashCodeGenerator
         this.guavaEqualsGenerator = guavaEqualsGenerator
+        this.methodChooser = methodChooser
     }
 
     @Override
     protected List<? extends GenerationInfo> generateMemberPrototypes(PsiClass psiClass, ClassMember[] originalMembers) throws IncorrectOperationException {
 
-        String equalsMethodName = chooseEqualsMethodName(psiClass)
-        String hashCodeMethodName = chooseHashCodeMethodName(psiClass)
+        String equalsMethodName = methodChooser.chooseEqualsMethodName(psiClass)
+        String hashCodeMethodName = methodChooser.chooseHashCodeMethodName(psiClass)
         def hashCodeMethod = guavaHashCodeGenerator.hashCodeMethod(myHashCodeFields as List, hashCodeMethodName)
         def equalsMethod = guavaEqualsGenerator.equalsMethod(myEqualsFields as List, psiClass, equalsMethodName)
 
         OverrideImplementUtil.convert2GenerationInfos([hashCodeMethod, equalsMethod])
     }
-
-    String chooseEqualsMethodName(PsiClass psiClass) {
-        PsiUtil.isLanguageLevel7OrHigher(psiClass) ? JAVA_7_EQUALS_METHOD : GUAVA_EQUALS_METHOD
-    }
-
-    String chooseHashCodeMethodName(PsiClass psiClass) {
-        PsiUtil.isLanguageLevel7OrHigher(psiClass) ? JAVA_7_HASH_CODE_METHOD : GUAVA_HASH_CODE_METHOD
-    }
-
 
     @Override
     protected ClassMember[] chooseOriginalMembers(PsiClass aClass, Project project, Editor editor) {
