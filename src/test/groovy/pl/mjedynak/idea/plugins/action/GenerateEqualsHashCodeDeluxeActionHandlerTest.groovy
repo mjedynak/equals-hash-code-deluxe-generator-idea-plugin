@@ -18,6 +18,10 @@ import spock.lang.Specification
 
 class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
 
+    private static final int OK_EXIT_CODE = DialogWrapper.OK_EXIT_CODE
+    private static final int NOT_OK_EXIT_CODE = DialogWrapper.OK_EXIT_CODE + 1
+
+
     GenerateEqualsHashCodeDeluxeActionHandler actionHandler =
         new GenerateEqualsHashCodeDeluxeActionHandler(guavaHashCodeGenerator, guavaEqualsGenerator, methodChooser, factory)
 
@@ -46,15 +50,16 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         }
         CodeInsightBundle.metaClass.'static'.message = {String key -> "anyString"}
         Messages.metaClass.'static'.getQuestionIcon = {Mock(Icon)}
-        Messages.metaClass.'static'.showYesNoDialog = {Project project, String message, String title,Icon icon -> DialogWrapper.OK_EXIT_CODE + 1}
+        Messages.metaClass.'static'.showYesNoDialog = {Project project, String message, String title, Icon icon -> NOT_OK_EXIT_CODE}
     }
 
-    def "prototype"() {
+    def "does not display wizard and do anything else when methods exist and user decides not to delete them"() {
         when:
         def members = actionHandler.chooseOriginalMembers(psiClass, project, editor)
 
         then:
-        members != null
-
+        members == null
+        1 * psiClass.getResolveScope()
+        0 * _
     }
 }
