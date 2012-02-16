@@ -27,8 +27,8 @@ import pl.mjedynak.idea.plugins.wizard.GenerateEqualsHashCodeDeluxeWizard
 
 class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBase {
 
-    static final String METHODS_DEFINED_FOR_ANONYMOUS_CLASS = "generate.equals.and.hashcode.already.defined.warning.anonymous"
-    static final String METHODS_DEFINED_FOR_CLASS = "generate.equals.and.hashcode.already.defined.warning"
+    static final String METHODS_DEFINED_FOR_ANONYMOUS_CLASS = "Methods 'boolean equals(Object)' or 'int hashCode()' are already defined \nfor this anonymous class. Do you want to delete them and proceed?"
+    static final String METHODS_DEFINED_FOR_CLASS = "Methods ''boolean equals(Object)'' or ''int hashCode()'' are already defined\nfor class {0}. Do you want to delete them and proceed?"
     static final String TITLE = "generate.equals.and.hashcode.already.defined.title"
 
     static final PsiElementClassMember[] DUMMY_RESULT = new PsiElementClassMember[1] //cannot return empty array, but this result won't be used anyway
@@ -131,8 +131,7 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
     }
 
     private String chooseText(PsiClass aClass) {
-        (aClass instanceof PsiAnonymousClass) ?
-            CodeInsightBundle.message(METHODS_DEFINED_FOR_ANONYMOUS_CLASS) : CodeInsightBundle.message(METHODS_DEFINED_FOR_CLASS, aClass.getQualifiedName())
+        (aClass instanceof PsiAnonymousClass) ? METHODS_DEFINED_FOR_ANONYMOUS_CLASS : METHODS_DEFINED_FOR_CLASS
     }
 
     @Override
