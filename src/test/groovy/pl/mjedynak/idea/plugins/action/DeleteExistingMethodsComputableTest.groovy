@@ -21,6 +21,19 @@ class DeleteExistingMethodsComputableTest extends Specification {
         hashCodeMethod.delete()
     }
 
+    def "deletes method only if it is not null"() {
+        hashCodeMethod = null
+        computable = new DeleteExistingMethodsComputable(equalsMethod, hashCodeMethod)
+        when:
+        boolean result = computable.compute()
+
+        then:
+        result == true
+        equalsMethod.delete()
+        0 * hashCodeMethod._
+    }
+
+
     def "returns false when IncorrectOperationException is thrown"() {
         equalsMethod.delete() >> { throw new IncorrectOperationException() }
 
@@ -30,6 +43,8 @@ class DeleteExistingMethodsComputableTest extends Specification {
         then:
         result == false
     }
+
+
 
 
 }

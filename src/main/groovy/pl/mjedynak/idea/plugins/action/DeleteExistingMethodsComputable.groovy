@@ -15,8 +15,8 @@ class DeleteExistingMethodsComputable implements Computable<Boolean> {
 
     public Boolean compute() {
         try {
-            equalsMethod.delete()
-            hashCodeMethod.delete()
+            equalsMethod?.delete()
+            hashCodeMethod?.delete()
             true
         }
         catch (IncorrectOperationException e) {
