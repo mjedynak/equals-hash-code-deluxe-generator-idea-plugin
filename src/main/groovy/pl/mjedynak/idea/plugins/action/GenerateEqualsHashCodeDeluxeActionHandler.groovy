@@ -126,11 +126,11 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
         equalsMethod != null
     }
 
-    boolean shouldDeleteMethods(Project project, String text) {
+    private boolean shouldDeleteMethods(Project project, String text) {
         Messages.showYesNoDialog(project, text, CodeInsightBundle.message(TITLE), Messages.getQuestionIcon()) == DialogWrapper.OK_EXIT_CODE
     }
 
-    String chooseText(PsiClass aClass) {
+    private String chooseText(PsiClass aClass) {
         (aClass instanceof PsiAnonymousClass) ?
             CodeInsightBundle.message(METHODS_DEFINED_FOR_ANONYMOUS_CLASS) : CodeInsightBundle.message(METHODS_DEFINED_FOR_CLASS, aClass.getQualifiedName())
     }
