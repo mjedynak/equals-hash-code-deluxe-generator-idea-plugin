@@ -1,12 +1,16 @@
 package pl.mjedynak.idea.plugins.action
 
+import com.intellij.codeInsight.CodeInsightBundle
 import com.intellij.codeInsight.generation.GenerateEqualsHelper
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.openapi.ui.Messages
 import com.intellij.psi.PsiClass
 import com.intellij.psi.impl.source.PsiMethodImpl
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.MethodSignature
+import javax.swing.Icon
 import pl.mjedynak.idea.plugins.factory.GenerateEqualsHashCodeDeluxeWizardFactory
 import pl.mjedynak.idea.plugins.generator.EqualsGenerator
 import pl.mjedynak.idea.plugins.generator.HashCodeGenerator
@@ -40,6 +44,9 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
                 hashCodeMethod
             }
         }
+        CodeInsightBundle.metaClass.'static'.message = {String key -> "anyString"}
+        Messages.metaClass.'static'.getQuestionIcon = {Mock(Icon)}
+        Messages.metaClass.'static'.showYesNoDialog = {Project project, String message, String title,Icon icon -> DialogWrapper.OK_EXIT_CODE + 1}
     }
 
     def "prototype"() {
