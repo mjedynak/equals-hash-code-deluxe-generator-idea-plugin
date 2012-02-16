@@ -20,6 +20,7 @@ import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiModifier
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.IncorrectOperationException
+import pl.mjedynak.idea.plugins.factory.GenerateEqualsHashCodeDeluxeWizardFactory
 import pl.mjedynak.idea.plugins.generator.EqualsGenerator
 import pl.mjedynak.idea.plugins.generator.HashCodeGenerator
 import pl.mjedynak.idea.plugins.wizard.GenerateEqualsHashCodeDeluxeWizard
@@ -35,16 +36,19 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
     HashCodeGenerator guavaHashCodeGenerator
     EqualsGenerator guavaEqualsGenerator
     MethodChooser methodChooser
+    GenerateEqualsHashCodeDeluxeWizardFactory factory
 
     PsiField[] myEqualsFields = null
     PsiField[] myHashCodeFields = null
 
 
-    GenerateEqualsHashCodeDeluxeActionHandler(HashCodeGenerator guavaHashCodeGenerator, EqualsGenerator guavaEqualsGenerator, MethodChooser methodChooser) {
+    GenerateEqualsHashCodeDeluxeActionHandler(HashCodeGenerator guavaHashCodeGenerator, EqualsGenerator guavaEqualsGenerator,
+                                              MethodChooser methodChooser, GenerateEqualsHashCodeDeluxeWizardFactory factory) {
         super("")
         this.guavaHashCodeGenerator = guavaHashCodeGenerator
         this.guavaEqualsGenerator = guavaEqualsGenerator
         this.methodChooser = methodChooser
+        this.factory = factory
     }
 
     @Override
@@ -95,7 +99,7 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
             return null
         }
 
-        GenerateEqualsHashCodeDeluxeWizard wizard = createWizard(project, aClass, needEquals, needHashCode)
+        GenerateEqualsHashCodeDeluxeWizard wizard = factory.createWizard(project, aClass, needEquals, needHashCode)
 
         wizard.show()
         if (!wizard.isOK()) {
@@ -108,10 +112,6 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
 
     private boolean methodsDeletedSuccessfully(PsiMethod equalsMethod, PsiMethod hashCodeMethod) {
         return ApplicationManager.getApplication().runWriteAction(new DeleteExistingMethodsComputable(equalsMethod, hashCodeMethod)).booleanValue()
-    }
-
-    private GenerateEqualsHashCodeDeluxeWizard createWizard(Project project, PsiClass aClass, boolean needEquals, boolean needHashCode) {
-        return new GenerateEqualsHashCodeDeluxeWizard(project, aClass, needEquals, needHashCode)
     }
 
     private boolean hashCodeExists(PsiMethod hashCodeMethod) {
