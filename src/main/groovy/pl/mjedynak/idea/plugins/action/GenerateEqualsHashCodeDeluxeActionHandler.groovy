@@ -60,61 +60,66 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
 
     @Override
     protected ClassMember[] chooseOriginalMembers(PsiClass aClass, Project project, Editor editor) {
-        myEqualsFields = null;
-        myHashCodeFields = null;
+        myEqualsFields = null
+        myHashCodeFields = null
 
         GlobalSearchScope scope = aClass.resolveScope
         final PsiMethod equalsMethod = GenerateEqualsHelper.findMethod(aClass, GenerateEqualsHelper.getEqualsSignature(project, scope))
         final PsiMethod hashCodeMethod = GenerateEqualsHelper.findMethod(aClass, GenerateEqualsHelper.hashCodeSignature)
 
-        boolean needEquals = isEqualsNeeded(equalsMethod);
-        boolean needHashCode = isHashCodeNeeded(hashCodeMethod);
+        boolean equalsOrHashCodeExist = equalsExist(equalsMethod) || hashCodeExists(hashCodeMethod)
+        boolean needEquals = !equalsExist(equalsMethod)
+        boolean needHashCode = !hashCodeExists(hashCodeMethod)
 
-        if (!needEquals && !needHashCode) {
+        if (equalsOrHashCodeExist) {
             String text = chooseText(aClass)
             if (shouldDeleteMethods(project, text)) {
-                if (!ApplicationManager.getApplication().runWriteAction(new DeleteExistingMethodsComputable(equalsMethod, hashCodeMethod)).booleanValue()) {
-                    return null;
+                if (methodsDeletedSuccessfully(equalsMethod, hashCodeMethod)) {
+                    needEquals = needHashCode = true
                 } else {
-                    needEquals = needHashCode = true;
+                    return null
                 }
             } else {
-                return null;
+                return null
             }
         }
-        boolean hasNonStaticFields = false;
+        boolean hasNonStaticFields = false
         for (PsiField field: aClass.getFields()) {
             if (!field.hasModifierProperty(PsiModifier.STATIC)) {
-                hasNonStaticFields = true;
-                break;
+                hasNonStaticFields = true
+                break
             }
         }
         if (!hasNonStaticFields) {
-            HintManager.getInstance().showErrorHint(editor, "No fields to include in equals/hashCode have been found");
-            return null;
+            HintManager.getInstance().showErrorHint(editor, "No fields to include in equals/hashCode have been found")
+            return null
         }
 
-        GenerateEqualsHashCodeDeluxeWizard wizard = createWizard(project, aClass, needEquals, needHashCode);
+        GenerateEqualsHashCodeDeluxeWizard wizard = createWizard(project, aClass, needEquals, needHashCode)
 
-        wizard.show();
+        wizard.show()
         if (!wizard.isOK()) {
             return null
-        };
-        myEqualsFields = wizard.getEqualsFields();
-        myHashCodeFields = wizard.getHashCodeFields();
-        return DUMMY_RESULT;
+        }
+        myEqualsFields = wizard.getEqualsFields()
+        myHashCodeFields = wizard.getHashCodeFields()
+        return DUMMY_RESULT
+    }
+
+    private boolean methodsDeletedSuccessfully(PsiMethod equalsMethod, PsiMethod hashCodeMethod) {
+        return ApplicationManager.getApplication().runWriteAction(new DeleteExistingMethodsComputable(equalsMethod, hashCodeMethod)).booleanValue()
     }
 
     private GenerateEqualsHashCodeDeluxeWizard createWizard(Project project, PsiClass aClass, boolean needEquals, boolean needHashCode) {
         return new GenerateEqualsHashCodeDeluxeWizard(project, aClass, needEquals, needHashCode)
     }
 
-    private boolean isHashCodeNeeded(PsiMethod hashCodeMethod) {
-        return hashCodeMethod == null
+    private boolean hashCodeExists(PsiMethod hashCodeMethod) {
+        hashCodeMethod != null
     }
 
-    private boolean isEqualsNeeded(PsiMethod equalsMethod) {
-        return equalsMethod == null
+    private boolean equalsExist(PsiMethod equalsMethod) {
+        equalsMethod != null
     }
 
     boolean shouldDeleteMethods(Project project, String text) {
@@ -128,9 +133,9 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
 
     @Override
     protected void cleanup() {
-        super.cleanup();
-        myEqualsFields = null;
-        myHashCodeFields = null;
+        super.cleanup()
+        myEqualsFields = null
+        myHashCodeFields = null
     }
 
     @Override
