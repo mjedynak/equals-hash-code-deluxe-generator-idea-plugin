@@ -2,6 +2,9 @@ package pl.mjedynak.idea.plugins.action
 
 import com.intellij.codeInsight.CodeInsightBundle
 import com.intellij.codeInsight.generation.GenerateEqualsHelper
+import com.intellij.codeInsight.hint.HintManager
+import com.intellij.openapi.application.Application
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
@@ -21,7 +24,6 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
     private static final int OK_EXIT_CODE = DialogWrapper.OK_EXIT_CODE
     private static final int NOT_OK_EXIT_CODE = DialogWrapper.OK_EXIT_CODE + 1
 
-
     GenerateEqualsHashCodeDeluxeActionHandler actionHandler =
         new GenerateEqualsHashCodeDeluxeActionHandler(guavaHashCodeGenerator, guavaEqualsGenerator, methodChooser, factory)
 
@@ -37,6 +39,8 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
     MethodSignature hashCodeMethodSignature = Mock()
     PsiMethodImpl equalsMethod = Mock()
     PsiMethodImpl hashCodeMethod = Mock()
+    Application application = Mock()
+    HintManager hintManager = Mock()
 
     def setup() {
         GenerateEqualsHelper.metaClass.'static'.getEqualsSignature = { Project project, GlobalSearchScope scope -> equalsMethodSignature }
@@ -50,16 +54,60 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         }
         CodeInsightBundle.metaClass.'static'.message = {String key -> "anyString"}
         Messages.metaClass.'static'.getQuestionIcon = {Mock(Icon)}
-        Messages.metaClass.'static'.showYesNoDialog = {Project project, String message, String title, Icon icon -> NOT_OK_EXIT_CODE}
+        ApplicationManager.metaClass.'static'.getApplication = {application}
+        HintManager.metaClass.'static'.getInstance = {hintManager}
+
     }
 
-    def "does not display wizard and do anything else when methods exist and user decides not to delete them"() {
+    def "does not display wizard when methods exist and user decides not to delete them"() {
+        userClicksNo()
+
         when:
         def members = actionHandler.chooseOriginalMembers(psiClass, project, editor)
 
         then:
         members == null
-        1 * psiClass.getResolveScope()
-        0 * _
+        0 * factory._
+    }
+
+    def "does not display wizard when methods exist but deletion is not successful"() {
+        userClicksYes()
+        deletionNotSuccessful()
+
+        when:
+        def members = actionHandler.chooseOriginalMembers(psiClass, project, editor)
+
+        then:
+        members == null
+        0 * factory._
+    }
+
+    def "displays error message when class has only static fields"() {
+        userClicksYes()
+        deletionSuccessful()
+
+        when:
+        def members = actionHandler.chooseOriginalMembers(psiClass, project, editor)
+
+        then:
+        members == null
+        1 * hintManager.showErrorHint(editor, actionHandler.ONLY_STATIC_FIELDS_ERROR)
+        0 * factory._
+    }
+
+    def deletionNotSuccessful() {
+        application.runWriteAction(_ as DeleteExistingMethodsComputable) >> false
+    }
+
+    def deletionSuccessful() {
+        application.runWriteAction(_ as DeleteExistingMethodsComputable) >> true
+    }
+
+    def userClicksYes() {
+        Messages.metaClass.'static'.showYesNoDialog = {Project project, String message, String title, Icon icon -> OK_EXIT_CODE}
+    }
+
+    def userClicksNo() {
+        Messages.metaClass.'static'.showYesNoDialog = {Project project, String message, String title, Icon icon -> NOT_OK_EXIT_CODE}
     }
 }

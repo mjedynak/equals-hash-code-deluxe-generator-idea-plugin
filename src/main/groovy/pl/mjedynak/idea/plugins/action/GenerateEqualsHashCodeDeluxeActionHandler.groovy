@@ -8,6 +8,7 @@ import com.intellij.codeInsight.generation.GenerationInfo
 import com.intellij.codeInsight.generation.OverrideImplementUtil
 import com.intellij.codeInsight.generation.PsiElementClassMember
 import com.intellij.codeInsight.hint.HintManager
+import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
@@ -31,7 +32,8 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
     static final String METHODS_DEFINED_FOR_CLASS = "Methods ''boolean equals(Object)'' or ''int hashCode()'' are already defined\nfor class {0}. Do you want to delete them and proceed?"
     static final String TITLE = "generate.equals.and.hashcode.already.defined.title"
 
-    static final PsiElementClassMember[] DUMMY_RESULT = new PsiElementClassMember[1] //cannot return empty array, but this result won't be used anyway
+    static final PsiElementClassMember[] DUMMY_RESULT = new PsiElementClassMember[1]
+    static final String ONLY_STATIC_FIELDS_ERROR = "No fields to include in equals/hashCode have been found" //cannot return empty array, but this result won't be used anyway
 
     HashCodeGenerator guavaHashCodeGenerator
     EqualsGenerator guavaEqualsGenerator
@@ -88,7 +90,7 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
             }
         }
         if (hasOnlyStaticFields(aClass)) {
-            HintManager.getInstance().showErrorHint(editor, "No fields to include in equals/hashCode have been found")
+            HintManager.getInstance().showErrorHint(editor, ONLY_STATIC_FIELDS_ERROR)
             return null
         }
 
@@ -115,7 +117,8 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
     }
 
     private boolean methodsDeletedSuccessfully(PsiMethod equalsMethod, PsiMethod hashCodeMethod) {
-        return ApplicationManager.getApplication().runWriteAction(new DeleteExistingMethodsComputable(equalsMethod, hashCodeMethod)).booleanValue()
+        Application application = ApplicationManager.getApplication()
+        application.runWriteAction(new DeleteExistingMethodsComputable(equalsMethod, hashCodeMethod))
     }
 
     private boolean hashCodeExists(PsiMethod hashCodeMethod) {
