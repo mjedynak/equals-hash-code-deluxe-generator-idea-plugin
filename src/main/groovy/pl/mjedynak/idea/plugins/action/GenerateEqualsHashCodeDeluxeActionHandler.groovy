@@ -79,12 +79,8 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
 
         if (equalsOrHashCodeExist) {
             String text = chooseText(aClass)
-            if (shouldDeleteMethods(project, text)) {
-                if (methodsDeletedSuccessfully(equalsMethod, hashCodeMethod)) {
-                    needEquals = needHashCode = true
-                } else {
-                    return null
-                }
+            if (shouldDeleteMethods(project, text) && methodsDeletedSuccessfully(equalsMethod, hashCodeMethod)) {
+                needEquals = needHashCode = true
             } else {
                 return null
             }
