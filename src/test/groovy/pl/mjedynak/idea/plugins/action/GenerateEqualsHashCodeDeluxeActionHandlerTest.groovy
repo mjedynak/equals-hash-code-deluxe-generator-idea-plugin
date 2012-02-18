@@ -1,6 +1,7 @@
 package pl.mjedynak.idea.plugins.action
 
 import com.intellij.codeInsight.CodeInsightBundle
+import com.intellij.codeInsight.generation.ClassMember
 import com.intellij.codeInsight.generation.GenerateEqualsHelper
 import com.intellij.codeInsight.hint.HintManager
 import com.intellij.openapi.application.Application
@@ -44,7 +45,9 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
     Application application = Mock()
     HintManager hintManager = Mock()
     GenerateEqualsHashCodeDeluxeWizard wizard = Mock()
-
+    PsiField[] wizardEqualsFields = [Mock(PsiField)]
+    PsiField[] wizardHashCodeFields = [Mock(PsiField)]
+    ClassMember[] result
 
     def setup() {
         actionHandler = new GenerateEqualsHashCodeDeluxeActionHandler(guavaHashCodeGenerator, guavaEqualsGenerator, methodChooser, factory)
@@ -62,14 +65,13 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
     def "does not display wizard when methods exist and user decides not to delete them"() {
         equalsAndHashCodeExist()
         userClicksNoInDeleteDialog()
-
         when:
-        def result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
+        result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
 
         then:
-        result == null
         interaction {
             wizardIsNotDisplayed()
+            fieldsFromWizardAreNotAssigned()
         }
     }
 
@@ -80,13 +82,12 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         deletionNotSuccessful()
 
         when:
-        def result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
+        result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
 
         then:
-        result == null
-
         interaction {
             wizardIsNotDisplayed()
+            fieldsFromWizardAreNotAssigned()
         }
     }
 
@@ -97,13 +98,13 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         classHasOnlyStaticFields()
 
         when:
-        def result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
+        result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
 
         then:
-        result == null
         interaction {
             errorMessageIsDisplayed()
             wizardIsNotDisplayed()
+            fieldsFromWizardAreNotAssigned()
         }
     }
 
@@ -112,33 +113,42 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         userClicksCancelInWizard()
 
         when:
-        def result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
+        result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
 
         then:
-        result == null
         interaction {
             wizardIsDisplayed()
+            fieldsFromWizardAreNotAssigned()
         }
     }
 
     def "chosen fields from wizard are assigned"() {
         classHasNoStaticField()
         userClicksOkInWizard()
-        PsiField[] wizardEqualsFields = [Mock(PsiField)]
-        wizard.getEqualsFields() >> wizardEqualsFields
-        PsiField[] wizardHashCodeFields = [Mock(PsiField)]
-        wizard.getHashCodeFields() >> wizardHashCodeFields
+        wizardHasChosenFields()
 
         when:
-        def result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
+        result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
 
         then:
-        result != null
-        actionHandler.myEqualsFields == wizardEqualsFields
-        actionHandler.myHashCodeFields == wizardHashCodeFields
         interaction {
+            fieldsFromWizardAreAssigned()
             wizardIsDisplayed()
         }
+    }
+    
+
+
+    def fieldsFromWizardAreAssigned() {
+        result != null
+        actionHandler.equalsFields == wizardEqualsFields
+        actionHandler.hashCodeFields == wizardHashCodeFields
+    }
+
+    def fieldsFromWizardAreNotAssigned() {
+        result == null
+        actionHandler.equalsFields == null
+        actionHandler.hashCodeFields == null
     }
 
     def userClicksOkInWizard() {
@@ -187,6 +197,11 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
                 hashCodeMethod
             }
         }
+    }
+
+    def wizardHasChosenFields() {
+        wizard.getEqualsFields() >> wizardEqualsFields
+        wizard.getHashCodeFields() >> wizardHashCodeFields
     }
 
     def wizardIsNotDisplayed() {

@@ -40,8 +40,8 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
     MethodChooser methodChooser
     GenerateEqualsHashCodeDeluxeWizardFactory factory
 
-    PsiField[] myEqualsFields = null
-    PsiField[] myHashCodeFields = null
+    PsiField[] equalsFields = null
+    PsiField[] hashCodeFields = null
 
 
     GenerateEqualsHashCodeDeluxeActionHandler(HashCodeGenerator guavaHashCodeGenerator, EqualsGenerator guavaEqualsGenerator,
@@ -58,16 +58,16 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
 
         String equalsMethodName = methodChooser.chooseEqualsMethodName(psiClass)
         String hashCodeMethodName = methodChooser.chooseHashCodeMethodName(psiClass)
-        def hashCodeMethod = guavaHashCodeGenerator.hashCodeMethod(myHashCodeFields as List, hashCodeMethodName)
-        def equalsMethod = guavaEqualsGenerator.equalsMethod(myEqualsFields as List, psiClass, equalsMethodName)
+        def hashCodeMethod = guavaHashCodeGenerator.hashCodeMethod(hashCodeFields as List, hashCodeMethodName)
+        def equalsMethod = guavaEqualsGenerator.equalsMethod(equalsFields as List, psiClass, equalsMethodName)
 
         OverrideImplementUtil.convert2GenerationInfos([hashCodeMethod, equalsMethod])
     }
 
     @Override
     protected ClassMember[] chooseOriginalMembers(PsiClass aClass, Project project, Editor editor) {
-        myEqualsFields = null
-        myHashCodeFields = null
+        equalsFields = null
+        hashCodeFields = null
 
         GlobalSearchScope scope = aClass.resolveScope
         final PsiMethod equalsMethod = GenerateEqualsHelper.findMethod(aClass, GenerateEqualsHelper.getEqualsSignature(project, scope))
@@ -100,8 +100,8 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
         if (!wizard.isOK()) {
             return null
         }
-        myEqualsFields = wizard.getEqualsFields()
-        myHashCodeFields = wizard.getHashCodeFields()
+        equalsFields = wizard.getEqualsFields()
+        hashCodeFields = wizard.getHashCodeFields()
         return DUMMY_RESULT
     }
 
@@ -140,8 +140,8 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
     @Override
     protected void cleanup() {
         super.cleanup()
-        myEqualsFields = null
-        myHashCodeFields = null
+        equalsFields = null
+        hashCodeFields = null
     }
 
     @Override
