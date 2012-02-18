@@ -1,7 +1,6 @@
 package pl.mjedynak.idea.plugins.action
 
 import com.intellij.codeInsight.CodeInsightBundle
-import com.intellij.codeInsight.generation.ClassMember
 import com.intellij.codeInsight.generation.GenerateEqualsHelper
 import com.intellij.codeInsight.hint.HintManager
 import com.intellij.openapi.application.Application
@@ -46,8 +45,6 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
     HintManager hintManager = Mock()
     GenerateEqualsHashCodeDeluxeWizard wizard = Mock()
 
-    ClassMember[] result
-
 
     def setup() {
         actionHandler = new GenerateEqualsHashCodeDeluxeActionHandler(guavaHashCodeGenerator, guavaEqualsGenerator, methodChooser, factory)
@@ -67,11 +64,13 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         userClicksNoInDeleteDialog()
 
         when:
-        result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
+        def result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
 
         then:
-        methodsNotCreated()
-        0 * factory._
+        result == null
+        interaction {
+            wizardIsNotDisplayed()
+        }
     }
 
 
@@ -81,11 +80,14 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         deletionNotSuccessful()
 
         when:
-        result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
+        def result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
 
         then:
-        methodsNotCreated()
-        0 * factory._
+        result == null
+
+        interaction {
+            wizardIsNotDisplayed()
+        }
     }
 
     def "displays error message when class has only static fields"() {
@@ -95,12 +97,14 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         classHasOnlyStaticFields()
 
         when:
-        result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
+        def result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
 
         then:
-        methodsNotCreated()
-        1 * hintManager.showErrorHint(editor, actionHandler.ONLY_STATIC_FIELDS_ERROR)
-        0 * factory._
+        result == null
+        interaction {
+            errorMessageIsDisplayed()
+            wizardIsNotDisplayed()
+        }
     }
 
     def "shows wizard but does not create methods because user clicks cancel"() {
@@ -108,23 +112,33 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         userClicksCancelInWizard()
 
         when:
-        result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
+        def result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
 
         then:
-        methodsNotCreated()
-        1 * wizard.show()
+        result == null
+        interaction {
+            wizardIsDisplayed()
+        }
     }
 
-    def "creates methods"() {
+    def "chosen fields from wizard are assigned"() {
         classHasNoStaticField()
         userClicksOkInWizard()
+        PsiField[] wizardEqualsFields = [Mock(PsiField)]
+        wizard.getEqualsFields() >> wizardEqualsFields
+        PsiField[] wizardHashCodeFields = [Mock(PsiField)]
+        wizard.getHashCodeFields() >> wizardHashCodeFields
 
         when:
-        result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
+        def result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
 
         then:
-        methodsCreated()
-        1 * wizard.show()
+        result != null
+        actionHandler.myEqualsFields == wizardEqualsFields
+        actionHandler.myHashCodeFields == wizardHashCodeFields
+        interaction {
+            wizardIsDisplayed()
+        }
     }
 
     def userClicksOkInWizard() {
@@ -175,12 +189,15 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         }
     }
 
-    def boolean methodsNotCreated() {
-        result == null
+    def wizardIsNotDisplayed() {
+        0 * factory._
     }
 
-    def boolean methodsCreated() {
-        result != null
+    def wizardIsDisplayed() {
+        1 * wizard.show()
     }
 
+    def errorMessageIsDisplayed() {
+        1 * hintManager.showErrorHint(editor, actionHandler.ONLY_STATIC_FIELDS_ERROR)
+    }
 }
