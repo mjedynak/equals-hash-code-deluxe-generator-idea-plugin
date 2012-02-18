@@ -3,6 +3,7 @@ package pl.mjedynak.idea.plugins.action
 import com.intellij.codeInsight.CodeInsightBundle
 import com.intellij.codeInsight.generation.ClassMember
 import com.intellij.codeInsight.generation.GenerateEqualsHelper
+import com.intellij.codeInsight.generation.OverrideImplementUtil
 import com.intellij.codeInsight.hint.HintManager
 import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
@@ -137,7 +138,7 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
             wizardIsDisplayed()
         }
     }
-    
+
     def "returns no original members"() {
         when:
         def result = actionHandler.getAllOriginalMembers(psiClass)
@@ -163,6 +164,32 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         then:
         fieldsAreNotAssigned()
     }
+
+
+    def "returns list with generated methods as list of GenerationInfo objects"() {
+        String equalsMethodName = 'equalsMethodName'
+        methodChooser.chooseEqualsMethodName(psiClass) >> equalsMethodName
+        String hashCodeMethodName = 'hashCodeMethodName'
+        methodChooser.chooseHashCodeMethodName(psiClass) >> hashCodeMethodName
+
+        guavaEqualsGenerator.equalsMethod(null, psiClass, equalsMethodName) >> equalsMethod
+        guavaHashCodeGenerator.hashCodeMethod(null, hashCodeMethodName) >> hashCodeMethod
+
+        def list = Mock(List)
+        OverrideImplementUtil.metaClass.'static'.convert2GenerationInfos = { Collection collection ->
+            if (collection == [hashCodeMethod, equalsMethod]) {
+                return list
+            }
+            return null
+        }
+
+        when:
+        def result = actionHandler.generateMemberPrototypes(psiClass, [classMember] as ClassMember[])
+
+        then:
+        result == list
+    }
+
 
     def fieldsAreAssigned() {
         actionHandler.equalsFields = [Mock(PsiField)]
