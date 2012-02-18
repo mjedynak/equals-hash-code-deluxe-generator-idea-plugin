@@ -47,6 +47,7 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
     GenerateEqualsHashCodeDeluxeWizard wizard = Mock()
     PsiField[] wizardEqualsFields = [Mock(PsiField)]
     PsiField[] wizardHashCodeFields = [Mock(PsiField)]
+    ClassMember classMember = Mock()
     ClassMember[] result
 
     def setup() {
@@ -74,7 +75,6 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
             fieldsFromWizardAreNotAssigned()
         }
     }
-
 
     def "does not display wizard when methods exist but deletion is not successful"() {
         equalsAndHashCodeExist()
@@ -116,9 +116,9 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
 
         then:
+        fieldsFromWizardAreNotAssigned()
         interaction {
             wizardIsDisplayed()
-            fieldsFromWizardAreNotAssigned()
         }
     }
 
@@ -131,24 +131,41 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
 
         then:
+        fieldsFromWizardAreAssigned()
         interaction {
-            fieldsFromWizardAreAssigned()
             wizardIsDisplayed()
         }
     }
     
+    def "returns no original members"() {
+        when:
+        def result = actionHandler.getAllOriginalMembers(psiClass)
 
-
-    def fieldsFromWizardAreAssigned() {
-        result != null
-        actionHandler.equalsFields == wizardEqualsFields
-        actionHandler.hashCodeFields == wizardHashCodeFields
+        then:
+        result == null
     }
 
-    def fieldsFromWizardAreNotAssigned() {
+    def "generates no member prototypes"() {
+        when:
+        def result = actionHandler.generateMemberPrototypes(psiClass, classMember)
+
+        then:
         result == null
-        actionHandler.equalsFields == null
-        actionHandler.hashCodeFields == null
+    }
+
+    def "assigns fields to null on cleanup"() {
+        fieldsAreAssigned()
+
+        when:
+        actionHandler.cleanup()
+
+        then:
+        fieldsAreNotAssigned()
+    }
+
+    def fieldsAreAssigned() {
+        actionHandler.equalsFields = [Mock(PsiField)]
+        actionHandler.hashCodeFields = [Mock(PsiField)]
     }
 
     def userClicksOkInWizard() {
@@ -214,5 +231,22 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
 
     def errorMessageIsDisplayed() {
         1 * hintManager.showErrorHint(editor, actionHandler.ONLY_STATIC_FIELDS_ERROR)
+    }
+
+    def void fieldsAreNotAssigned() {
+        assert actionHandler.equalsFields == null
+        assert actionHandler.hashCodeFields == null
+    }
+
+    def void fieldsFromWizardAreAssigned() {
+        assert result != null
+        assert actionHandler.equalsFields == wizardEqualsFields
+        assert actionHandler.hashCodeFields == wizardHashCodeFields
+    }
+
+    def void fieldsFromWizardAreNotAssigned() {
+        assert result == null
+        assert actionHandler.equalsFields == null
+        assert actionHandler.hashCodeFields == null
     }
 }
