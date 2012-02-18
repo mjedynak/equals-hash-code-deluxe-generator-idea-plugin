@@ -86,7 +86,7 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
             }
         }
         if (hasOnlyStaticFields(aClass)) {
-            HintManager.getInstance().showErrorHint(editor, ONLY_STATIC_FIELDS_ERROR)
+            showErrorMessage(editor)
             return null
         }
 
@@ -99,6 +99,10 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
         equalsFields = wizard.getEqualsFields()
         hashCodeFields = wizard.getHashCodeFields()
         return DUMMY_RESULT
+    }
+
+    private showErrorMessage(Editor editor) {
+        HintManager.getInstance().showErrorHint(editor, ONLY_STATIC_FIELDS_ERROR)
     }
 
     private boolean hasOnlyStaticFields(PsiClass aClass) {
