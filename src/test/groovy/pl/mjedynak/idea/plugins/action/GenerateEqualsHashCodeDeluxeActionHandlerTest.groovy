@@ -66,14 +66,15 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
     def "does not display wizard when methods exist and user decides not to delete them"() {
         equalsAndHashCodeExist()
         userClicksNoInDeleteDialog()
+
         when:
         result = actionHandler.chooseOriginalMembers(psiClass, project, editor)
 
         then:
         interaction {
             wizardIsNotDisplayed()
-            fieldsFromWizardAreNotAssigned()
         }
+        fieldsFromWizardAreNotAssigned()
     }
 
     def "does not display wizard when methods exist but deletion is not successful"() {
@@ -87,8 +88,8 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         then:
         interaction {
             wizardIsNotDisplayed()
-            fieldsFromWizardAreNotAssigned()
         }
+        fieldsFromWizardAreNotAssigned()
     }
 
     def "displays error message when class has only static fields"() {
@@ -104,8 +105,8 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         interaction {
             errorMessageIsDisplayed()
             wizardIsNotDisplayed()
-            fieldsFromWizardAreNotAssigned()
         }
+        fieldsFromWizardAreNotAssigned()
     }
 
     def "shows wizard but does not create methods because user clicks cancel"() {
