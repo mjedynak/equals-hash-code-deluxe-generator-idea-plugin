@@ -1,4 +1,4 @@
-<idea-plugin version="2">
+<idea-plugin version="2" url="https://github.com/mjedynak/EqualsHashCodeDeluxeGenerator">
   <name>Equals / HashCode Deluxe Generator</name>
   <description>
       <![CDATA[
