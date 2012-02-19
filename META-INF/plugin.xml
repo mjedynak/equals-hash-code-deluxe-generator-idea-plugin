@@ -2,14 +2,14 @@
   <name>Equals / HashCode Deluxe Generator</name>
   <description>
       <![CDATA[
-      Generates equals() and hashCode() using Guava library or Objects class from Java 7</description>
+      Generates equals() and hashCode() using Guava library or Objects class from Java 7.
       Usage:
       <ul>
           <li>ALT + INSERT -> equals() and hashCode() deluxe (inside Java Editor).</li>
       </ul>
       ]]>
     </description>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
     <vendor email="m.jedynak [at] gmail.com">Michal Jedynak
     </vendor>
   <idea-version since-build="111.69"/>
