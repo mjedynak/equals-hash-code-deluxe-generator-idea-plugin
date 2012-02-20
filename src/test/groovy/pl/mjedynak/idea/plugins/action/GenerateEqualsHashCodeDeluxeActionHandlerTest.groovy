@@ -57,7 +57,7 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         GenerateEqualsHelper.metaClass.'static'.getEqualsSignature = { Project project, GlobalSearchScope scope -> equalsMethodSignature }
         GenerateEqualsHelper.metaClass.'static'.getHashCodeSignature = { hashCodeMethodSignature }
         GenerateEqualsHelper.metaClass.'static'.findMethod = {PsiClass psiClass, MethodSignature methodSignature -> null}
-        CodeInsightBundle.metaClass.'static'.message = {String key -> "anyString"}
+        CodeInsightBundle.metaClass.'static'.message = {String key -> 'anyString'}
         Messages.metaClass.'static'.getQuestionIcon = {Mock(Icon)}
         ApplicationManager.metaClass.'static'.getApplication = {application}
         HintManager.metaClass.'static'.getInstance = {hintManager}
@@ -180,7 +180,7 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
             if (collection == [hashCodeMethod, equalsMethod]) {
                 return list
             }
-            return null
+            null
         }
 
         when:
@@ -245,8 +245,8 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
     }
 
     def wizardHasChosenFields() {
-        wizard.getEqualsFields() >> wizardEqualsFields
-        wizard.getHashCodeFields() >> wizardHashCodeFields
+        wizard.equalsFields >> wizardEqualsFields
+        wizard.hashCodeFields >> wizardHashCodeFields
     }
 
     def wizardIsNotDisplayed() {
@@ -261,18 +261,18 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         1 * hintManager.showErrorHint(editor, actionHandler.ONLY_STATIC_FIELDS_ERROR)
     }
 
-    def void fieldsAreNotAssigned() {
+    void fieldsAreNotAssigned() {
         assert actionHandler.equalsFields == null
         assert actionHandler.hashCodeFields == null
     }
 
-    def void fieldsFromWizardAreAssigned() {
+    void fieldsFromWizardAreAssigned() {
         assert result != null
         assert actionHandler.equalsFields == wizardEqualsFields
         assert actionHandler.hashCodeFields == wizardHashCodeFields
     }
 
-    def void fieldsFromWizardAreNotAssigned() {
+    void fieldsFromWizardAreNotAssigned() {
         assert result == null
         assert actionHandler.equalsFields == null
         assert actionHandler.hashCodeFields == null

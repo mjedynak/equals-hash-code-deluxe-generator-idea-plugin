@@ -13,7 +13,7 @@ class DeleteExistingMethodsComputable implements Computable<Boolean> {
         this.hashCodeMethod = hashCodeMethod
     }
 
-    public Boolean compute() {
+    Boolean compute() {
         try {
             equalsMethod?.delete()
             hashCodeMethod?.delete()

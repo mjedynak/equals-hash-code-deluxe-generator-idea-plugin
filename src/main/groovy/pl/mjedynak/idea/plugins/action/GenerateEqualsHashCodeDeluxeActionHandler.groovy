@@ -28,12 +28,12 @@ import pl.mjedynak.idea.plugins.wizard.GenerateEqualsHashCodeDeluxeWizard
 
 class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBase {
 
-    static final String METHODS_DEFINED_FOR_ANONYMOUS_CLASS = "Methods 'boolean equals(Object)' or 'int hashCode()' are already defined \nfor this anonymous class. Do you want to delete them and proceed?"
-    static final String METHODS_DEFINED_FOR_CLASS = "Methods ''boolean equals(Object)'' or ''int hashCode()'' are already defined\nfor class {0}. Do you want to delete them and proceed?"
-    static final String TITLE = "generate.equals.and.hashcode.already.defined.title"
+    static final String METHODS_DEFINED_FOR_ANONYMOUS_CLASS = 'Methods "boolean equals(Object)" or "int hashCode()" are already defined \nfor this anonymous class. Do you want to delete them and proceed?'
+    static final String METHODS_DEFINED_FOR_CLASS = 'Methods "boolean equals(Object)" or "int hashCode()" are already defined\nfor class {0}. Do you want to delete them and proceed?'
+    static final String TITLE = 'generate.equals.and.hashcode.already.defined.title'
 
     static final PsiElementClassMember[] DUMMY_RESULT = new PsiElementClassMember[1]
-    static final String ONLY_STATIC_FIELDS_ERROR = "No fields to include in equals/hashCode have been found" //cannot return empty array, but this result won't be used anyway
+    static final String ONLY_STATIC_FIELDS_ERROR = 'No fields to include in equals/hashCode have been found' //cannot return empty array, but this result won't be used anyway
 
     HashCodeGenerator guavaHashCodeGenerator
     EqualsGenerator guavaEqualsGenerator
@@ -46,7 +46,7 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
 
     GenerateEqualsHashCodeDeluxeActionHandler(HashCodeGenerator guavaHashCodeGenerator, EqualsGenerator guavaEqualsGenerator,
                                               MethodChooser methodChooser, GenerateEqualsHashCodeDeluxeWizardFactory factory) {
-        super("")
+        super('')
         this.guavaHashCodeGenerator = guavaHashCodeGenerator
         this.guavaEqualsGenerator = guavaEqualsGenerator
         this.methodChooser = methodChooser
@@ -70,8 +70,8 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
         hashCodeFields = null
 
         GlobalSearchScope scope = aClass.resolveScope
-        final PsiMethod equalsMethod = GenerateEqualsHelper.findMethod(aClass, GenerateEqualsHelper.getEqualsSignature(project, scope))
-        final PsiMethod hashCodeMethod = GenerateEqualsHelper.findMethod(aClass, GenerateEqualsHelper.hashCodeSignature)
+        PsiMethod equalsMethod = GenerateEqualsHelper.findMethod(aClass, GenerateEqualsHelper.getEqualsSignature(project, scope))
+        PsiMethod hashCodeMethod = GenerateEqualsHelper.findMethod(aClass, GenerateEqualsHelper.hashCodeSignature)
 
         boolean equalsOrHashCodeExist = equalsExist(equalsMethod) || hashCodeExists(hashCodeMethod)
         boolean needEquals = !equalsExist(equalsMethod)
@@ -96,13 +96,13 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
         if (!wizard.isOK()) {
             return null
         }
-        equalsFields = wizard.getEqualsFields()
-        hashCodeFields = wizard.getHashCodeFields()
-        return DUMMY_RESULT
+        equalsFields = wizard.equalsFields
+        hashCodeFields = wizard.hashCodeFields
+        DUMMY_RESULT
     }
 
     private showErrorMessage(Editor editor) {
-        HintManager.getInstance().showErrorHint(editor, ONLY_STATIC_FIELDS_ERROR)
+        HintManager.instance.showErrorHint(editor, ONLY_STATIC_FIELDS_ERROR)
     }
 
     private boolean hasOnlyStaticFields(PsiClass aClass) {
@@ -117,7 +117,7 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
     }
 
     private boolean methodsDeletedSuccessfully(PsiMethod equalsMethod, PsiMethod hashCodeMethod) {
-        Application application = ApplicationManager.getApplication()
+        Application application = ApplicationManager.application
         application.runWriteAction(new DeleteExistingMethodsComputable(equalsMethod, hashCodeMethod))
     }
 
@@ -130,7 +130,7 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
     }
 
     private boolean shouldDeleteMethods(Project project, String text) {
-        Messages.showYesNoDialog(project, text, CodeInsightBundle.message(TITLE), Messages.getQuestionIcon()) == DialogWrapper.OK_EXIT_CODE
+        Messages.showYesNoDialog(project, text, CodeInsightBundle.message(TITLE), Messages.questionIcon) == DialogWrapper.OK_EXIT_CODE
     }
 
     private String chooseText(PsiClass aClass) {

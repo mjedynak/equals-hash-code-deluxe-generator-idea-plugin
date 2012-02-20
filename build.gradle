@@ -1,5 +1,5 @@
 apply plugin: 'groovy'
-//apply plugin: 'code-quality'
+apply plugin: 'codenarc'
 apply plugin: 'idea'
 apply from: 'idea.gradle'
 apply from: 'cobertura.gradle'
@@ -18,7 +18,6 @@ check.dependsOn cobertura
 
 repositories {
     mavenCentral()
-    mavenLocal()
 //    mavenRepo url: 'http://m2repo.spockframework.org/snapshots'
 }
 

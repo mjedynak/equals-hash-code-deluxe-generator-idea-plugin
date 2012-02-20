@@ -19,14 +19,14 @@ class HashCodeGeneratorTest extends Specification {
 
     def setup() {
         JavaPsiFacade.metaClass.'static'.getInstance = { Project project -> javaPsiFacade}
-        javaPsiFacade.getElementFactory() >> elementFactory
+        javaPsiFacade.elementFactory >> elementFactory
     }
 
     def "creates hashCode method for one field"() {
         String fieldName = 'field'
         psiField.name >> fieldName
         String hashCodeMethodName = 'hash'
-        elementFactory.createMethodFromText("@Override public int hashCode() {return Objects.hash(field);}", null, LanguageLevel.JDK_1_6) >> psiMethod
+        elementFactory.createMethodFromText('@Override public int hashCode() {return Objects.hash(field);}', null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
         def result = hashCodeGenerator.hashCodeMethod([psiField], hashCodeMethodName)
@@ -41,7 +41,7 @@ class HashCodeGeneratorTest extends Specification {
         psiField.name >> fieldName
         psiField2.name >> field2Name
         String hashCodeMethodName = 'hashCode'
-        elementFactory.createMethodFromText("@Override public int hashCode() {return Objects.hashCode(field,anotherField);}", null, LanguageLevel.JDK_1_6) >> psiMethod
+        elementFactory.createMethodFromText('@Override public int hashCode() {return Objects.hashCode(field,anotherField);}', null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
         def result = hashCodeGenerator.hashCodeMethod([psiField, psiField2], hashCodeMethodName)
@@ -52,7 +52,7 @@ class HashCodeGeneratorTest extends Specification {
 
     def "returns null if list is empty"() {
         when:
-        def result = hashCodeGenerator.hashCodeMethod([], "anyString")
+        def result = hashCodeGenerator.hashCodeMethod([], 'anyString')
 
         then:
         result == null
