@@ -1,5 +1,5 @@
 <idea-plugin version="2" url="https://github.com/mjedynak/EqualsHashCodeDeluxeGenerator">
-  <name>Equals / HashCode Deluxe Generator</name>
+  <name>Equals and HashCode Deluxe Generator</name>
   <description>
       <![CDATA[
       Generates equals() and hashCode() using Guava library or Objects class from Java 7.
@@ -10,7 +10,16 @@
       </ul>
       ]]>
     </description>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
+    <change-notes>
+        <![CDATA[
+           version 1.0.1
+           <br/>
+           <ul>
+           <li>Changed plugin name as slash character ('/') caused a bug with download link on JetBrains site.</li>
+           </ul>
+         ]]>
+    </change-notes>
     <vendor email="m.jedynak [at] gmail.com">Michal Jedynak
     </vendor>
   <idea-version since-build="111.69"/>
