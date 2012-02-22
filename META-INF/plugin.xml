@@ -1,7 +1,7 @@
 <idea-plugin version="2" url="https://github.com/mjedynak/EqualsHashCodeDeluxeGenerator">
-  <name>Equals and HashCode Deluxe Generator</name>
-  <description>
-      <![CDATA[
+    <name>Equals and HashCode Deluxe Generator</name>
+    <description>
+        <![CDATA[
       Generates equals() and hashCode() using Guava library or Objects class from Java 7.
       If project language level is set to 7.0 Objects class is used, otherwise Guava.
       Usage:
@@ -10,9 +10,14 @@
       </ul>
       ]]>
     </description>
-  <version>1.0.1</version>
+    <version>1.0.2</version>
     <change-notes>
         <![CDATA[
+           version 1.0.2
+           <br/>
+           <ul>
+           <li>Tested against IDEA 10.5</li>
+           </ul>
            version 1.0.1
            <br/>
            <ul>
@@ -22,21 +27,22 @@
     </change-notes>
     <vendor email="m.jedynak [at] gmail.com">Michal Jedynak
     </vendor>
-  <idea-version since-build="111.69"/>
+    <idea-version since-build="107.105"/>
 
-  <application-components>
-  </application-components>
+    <application-components>
+    </application-components>
 
-  <project-components>
-  </project-components>
+    <project-components>
+    </project-components>
 
-  <actions>
-      <action id="GenerateEqualsHashCodeDeluxe" class="pl.mjedynak.idea.plugins.action.GenerateEqualsHashCodeDeluxeAction"
-              text="equals() and hashCode() deluxe" description="Generate equals() and hashCode() methods">
-          <add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="JavaGenerateGroup1" />
-      </action>
-  </actions>
+    <actions>
+        <action id="GenerateEqualsHashCodeDeluxe"
+                class="pl.mjedynak.idea.plugins.action.GenerateEqualsHashCodeDeluxeAction"
+                text="equals() and hashCode() deluxe" description="Generate equals() and hashCode() methods">
+            <add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="JavaGenerateGroup1"/>
+        </action>
+    </actions>
 
-  <extensions defaultExtensionNs="com.intellij">
-  </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
 </idea-plugin>
