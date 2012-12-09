@@ -2,7 +2,6 @@ package pl.mjedynak.idea.plugins.wizard;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.generation.GenerateEqualsHelper;
-import com.intellij.ide.wizard.AbstractWizard;
 import com.intellij.ide.wizard.StepAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;

@@ -10,9 +10,14 @@
       </ul>
       ]]>
     </description>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
     <change-notes>
         <![CDATA[
+           version 1.0.3
+           <br/>
+           <ul>
+           <li>Fixed compatibility issue with IDEA 12</li>
+           </ul>
            version 1.0.2
            <br/>
            <ul>
