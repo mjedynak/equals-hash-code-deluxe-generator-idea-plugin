@@ -31,8 +31,9 @@ class EqualsGeneratorTest extends Specification {
         psiField.name >> fieldName
         String equalsMethodName = 'equals'
 
-        elementFactory.createMethodFromText('@Override public boolean equals(Object obj) { if (obj == null) {return false;} ' +
-                'if (getClass() != obj.getClass()) {return false;} final String other = (String) obj; return Objects.equals(this.field, other.field);}', null, LanguageLevel.JDK_1_6) >> psiMethod
+        elementFactory.createMethodFromText('@Override public boolean equals(Object obj) { if (this == obj) {return true;} ' +
+                'if (obj == null || getClass() != obj.getClass()) {return false;} ' +
+                'final String other = (String) obj; return Objects.equals(this.field, other.field);}', null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
         def result = equalsGenerator.equalsMethod([psiField], psiClass, equalsMethodName)
@@ -41,15 +42,15 @@ class EqualsGeneratorTest extends Specification {
         result == psiMethod
     }
 
-    def "creates equals method for two field"() {
+    def "creates equals method for two fields"() {
         String fieldName = 'field'
         String fieldName2 = 'anotherField'
         psiField.name >> fieldName
         psiField2.name >> fieldName2
         String equalsMethodName = 'equal'
 
-        elementFactory.createMethodFromText('@Override public boolean equals(Object obj) { if (obj == null) {return false;} ' +
-                'if (getClass() != obj.getClass()) {return false;} ' +
+        elementFactory.createMethodFromText('@Override public boolean equals(Object obj) { if (this == obj) {return true;} ' +
+                'if (obj == null || getClass() != obj.getClass()) {return false;} ' +
                 'final String other = (String) obj; return Objects.equal(this.field, other.field) && Objects.equal(this.anotherField, other.anotherField);}',
                 null, LanguageLevel.JDK_1_6) >> psiMethod
 
