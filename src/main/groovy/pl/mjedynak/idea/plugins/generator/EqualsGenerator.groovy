@@ -1,11 +1,7 @@
 package pl.mjedynak.idea.plugins.generator
 
 import com.intellij.pom.java.LanguageLevel
-import com.intellij.psi.JavaPsiFacade
-import com.intellij.psi.PsiClass
-import com.intellij.psi.PsiElementFactory
-import com.intellij.psi.PsiField
-import com.intellij.psi.PsiMethod
+import com.intellij.psi.*
 import org.jetbrains.annotations.NotNull
 
 class EqualsGenerator {
@@ -17,17 +13,28 @@ class EqualsGenerator {
             methodText << '@Override public boolean equals(Object obj) {'
             methodText << ' if (this == obj) {return true;}'
             methodText << ' if (obj == null || getClass() != obj.getClass()) {return false;}'
+            if (isSubclass(psiClass)) {
+                methodText << ' if (!super.equals(obj)) {return false;}'
+            }
             methodText << " final ${psiClass.name} other = (${psiClass.name}) obj;"
             methodText << ' return '
             equalsPsiFields.eachWithIndex { field, index ->
                 methodText <<  "Objects.${equalsMethodName}(this.${field.name}, other.${field.name})"
-                if (index < equalsPsiFields.size() - 1) {
+                if (isNotLastField(equalsPsiFields, index)) {
                     methodText << ' && '
                 }
             }
             methodText << ';}'
             factory.createMethodFromText(methodText.toString(), null, LanguageLevel.JDK_1_6)
         }
+    }
+
+    private boolean isSubclass(PsiClass psiClass) {
+        psiClass.extendsList?.referencedTypes?.length > 0
+    }
+
+    private boolean isNotLastField(@NotNull List<PsiField> equalsPsiFields, int index) {
+        index < equalsPsiFields.size() - 1
     }
 
     private PsiElementFactory getFactory(PsiField psiField) {
