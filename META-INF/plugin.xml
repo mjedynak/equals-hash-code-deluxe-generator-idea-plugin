@@ -10,9 +10,14 @@
       </ul>
       ]]>
     </description>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.4</version>
     <change-notes>
         <![CDATA[
+           version 1.0.4
+           <br/>
+           <ul>
+           <li>Added comparison with base class fo subclasses in equals method</li>
+           </ul>
            version 1.0.3
            <br/>
            <ul>
