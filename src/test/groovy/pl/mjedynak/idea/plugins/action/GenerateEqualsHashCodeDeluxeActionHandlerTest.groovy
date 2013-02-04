@@ -17,12 +17,15 @@ import com.intellij.psi.PsiModifier
 import com.intellij.psi.impl.source.PsiMethodImpl
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.MethodSignature
-import javax.swing.Icon
 import pl.mjedynak.idea.plugins.factory.GenerateEqualsHashCodeDeluxeWizardFactory
 import pl.mjedynak.idea.plugins.generator.EqualsGenerator
 import pl.mjedynak.idea.plugins.generator.HashCodeGenerator
 import pl.mjedynak.idea.plugins.wizard.GenerateEqualsHashCodeDeluxeWizard
 import spock.lang.Specification
+
+import javax.swing.*
+
+import static pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType.JAVA_7
 
 class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
 
@@ -33,8 +36,8 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
 
     HashCodeGenerator guavaHashCodeGenerator = Mock()
     EqualsGenerator guavaEqualsGenerator = Mock()
-    MethodChooser methodChooser = Mock()
     GenerateEqualsHashCodeDeluxeWizardFactory factory = Mock()
+    TypeChooser typeChooser = Mock()
 
     PsiClass psiClass = Mock()
     Project project = Mock()
@@ -52,7 +55,9 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
     ClassMember[] result
 
     def setup() {
-        actionHandler = new GenerateEqualsHashCodeDeluxeActionHandler(guavaHashCodeGenerator, guavaEqualsGenerator, methodChooser, factory)
+        actionHandler = new GenerateEqualsHashCodeDeluxeActionHandler(guavaHashCodeGenerator, guavaEqualsGenerator, factory, typeChooser)
+
+        typeChooser.chooseType(psiClass) >> JAVA_7
 
         GenerateEqualsHelper.metaClass.'static'.getEqualsSignature = { Project project, GlobalSearchScope scope -> equalsMethodSignature }
         GenerateEqualsHelper.metaClass.'static'.getHashCodeSignature = { hashCodeMethodSignature }
@@ -61,7 +66,7 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         Messages.metaClass.'static'.getQuestionIcon = {Mock(Icon)}
         ApplicationManager.metaClass.'static'.getApplication = {application}
         HintManager.metaClass.'static'.getInstance = {hintManager}
-        factory.createWizard(project, psiClass, true, true) >> wizard
+        factory.createWizard(project, psiClass, true, true, JAVA_7) >> wizard
     }
 
     def "does not display wizard when methods exist and user decides not to delete them"() {
@@ -167,13 +172,9 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
 
 
     def "returns list with generated methods as list of GenerationInfo objects"() {
-        String equalsMethodName = 'equalsMethodName'
-        methodChooser.chooseEqualsMethodName(psiClass) >> equalsMethodName
-        String hashCodeMethodName = 'hashCodeMethodName'
-        methodChooser.chooseHashCodeMethodName(psiClass) >> hashCodeMethodName
-
-        guavaEqualsGenerator.equalsMethod(null, psiClass, equalsMethodName) >> equalsMethod
-        guavaHashCodeGenerator.hashCodeMethod(null, hashCodeMethodName) >> hashCodeMethod
+        actionHandler.type = JAVA_7
+        guavaEqualsGenerator.equalsMethod(null, psiClass, JAVA_7.equalsMethodName()) >> equalsMethod
+        guavaHashCodeGenerator.hashCodeMethod(null, JAVA_7.hashCodeMethodName()) >> hashCodeMethod
 
         def list = Mock(List)
         OverrideImplementUtil.metaClass.'static'.convert2GenerationInfos = { Collection collection ->

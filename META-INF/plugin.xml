@@ -3,16 +3,20 @@
     <description>
         <![CDATA[
       Generates equals() and hashCode() using Guava library or Objects class from Java 7.
-      If project language level is set to 7.0 Objects class is used, otherwise Guava.
       Usage:
       <ul>
           <li>ALT + INSERT -> equals() and hashCode() deluxe (inside Java Editor).</li>
       </ul>
       ]]>
     </description>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <change-notes>
         <![CDATA[
+           version 1.0.5
+           <br/>
+           <ul>
+           <li>Added ability to choose between Java 7 and Guava </li>
+           </ul>
            version 1.0.4
            <br/>
            <ul>

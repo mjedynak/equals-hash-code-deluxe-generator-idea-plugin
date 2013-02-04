@@ -21,6 +21,7 @@ import com.intellij.refactoring.ui.MemberSelectionPanel;
 import com.intellij.refactoring.util.classMembers.MemberInfo;
 import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NotNull;
+import pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -47,8 +48,8 @@ public class GenerateEqualsHashCodeDeluxeWizard extends AbstractWizard {
     private static final MyMemberInfoFilter MEMBER_INFO_FILTER = new MyMemberInfoFilter();
 
 
-    public GenerateEqualsHashCodeDeluxeWizard(Project project, PsiClass aClass, boolean needEquals, boolean needHashCode) {
-        super(CodeInsightBundle.message("generate.equals.hashcode.wizard.title"), project);
+    public GenerateEqualsHashCodeDeluxeWizard(Project project, PsiClass aClass, boolean needEquals, boolean needHashCode, EqualsAndHashCodeType type) {
+        super(CodeInsightBundle.message("generate.equals.hashcode.wizard.title"), project, type);
         myClass = aClass;
 
         myClassFields = MemberInfo.extractClassMembers(myClass, MEMBER_INFO_FILTER, false);

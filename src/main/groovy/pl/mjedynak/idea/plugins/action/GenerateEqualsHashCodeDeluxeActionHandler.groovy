@@ -1,12 +1,7 @@
 package pl.mjedynak.idea.plugins.action
 
 import com.intellij.codeInsight.CodeInsightBundle
-import com.intellij.codeInsight.generation.ClassMember
-import com.intellij.codeInsight.generation.GenerateEqualsHelper
-import com.intellij.codeInsight.generation.GenerateMembersHandlerBase
-import com.intellij.codeInsight.generation.GenerationInfo
-import com.intellij.codeInsight.generation.OverrideImplementUtil
-import com.intellij.codeInsight.generation.PsiElementClassMember
+import com.intellij.codeInsight.generation.*
 import com.intellij.codeInsight.hint.HintManager
 import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
@@ -14,16 +9,13 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
-import com.intellij.psi.PsiAnonymousClass
-import com.intellij.psi.PsiClass
-import com.intellij.psi.PsiField
-import com.intellij.psi.PsiMethod
-import com.intellij.psi.PsiModifier
+import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.IncorrectOperationException
 import pl.mjedynak.idea.plugins.factory.GenerateEqualsHashCodeDeluxeWizardFactory
 import pl.mjedynak.idea.plugins.generator.EqualsGenerator
 import pl.mjedynak.idea.plugins.generator.HashCodeGenerator
+import pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType
 import pl.mjedynak.idea.plugins.wizard.GenerateEqualsHashCodeDeluxeWizard
 
 class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBase {
@@ -37,7 +29,8 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
 
     HashCodeGenerator guavaHashCodeGenerator
     EqualsGenerator guavaEqualsGenerator
-    MethodChooser methodChooser
+    TypeChooser typeChooser
+    EqualsAndHashCodeType type
     GenerateEqualsHashCodeDeluxeWizardFactory factory
 
     PsiField[] equalsFields = null
@@ -45,19 +38,19 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
 
 
     GenerateEqualsHashCodeDeluxeActionHandler(HashCodeGenerator guavaHashCodeGenerator, EqualsGenerator guavaEqualsGenerator,
-                                              MethodChooser methodChooser, GenerateEqualsHashCodeDeluxeWizardFactory factory) {
+                                              GenerateEqualsHashCodeDeluxeWizardFactory factory, TypeChooser typeChooser) {
         super('')
         this.guavaHashCodeGenerator = guavaHashCodeGenerator
         this.guavaEqualsGenerator = guavaEqualsGenerator
-        this.methodChooser = methodChooser
+        this.typeChooser = typeChooser
         this.factory = factory
     }
 
     @Override
     protected List<? extends GenerationInfo> generateMemberPrototypes(PsiClass psiClass, ClassMember[] originalMembers) throws IncorrectOperationException {
 
-        String equalsMethodName = methodChooser.chooseEqualsMethodName(psiClass)
-        String hashCodeMethodName = methodChooser.chooseHashCodeMethodName(psiClass)
+        String equalsMethodName = type.equalsMethodName()
+        String hashCodeMethodName = type.hashCodeMethodName()
         def hashCodeMethod = guavaHashCodeGenerator.hashCodeMethod(hashCodeFields as List, hashCodeMethodName)
         def equalsMethod = guavaEqualsGenerator.equalsMethod(equalsFields as List, psiClass, equalsMethodName)
 
@@ -90,7 +83,7 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
             return null
         }
 
-        GenerateEqualsHashCodeDeluxeWizard wizard = factory.createWizard(project, aClass, needEquals, needHashCode)
+        GenerateEqualsHashCodeDeluxeWizard wizard = factory.createWizard(project, aClass, needEquals, needHashCode, typeChooser.chooseType(aClass))
 
         wizard.show()
         if (!wizard.isOK()) {
@@ -98,6 +91,7 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
         }
         equalsFields = wizard.equalsFields
         hashCodeFields = wizard.hashCodeFields
+        type = wizard.type
         DUMMY_RESULT
     }
 

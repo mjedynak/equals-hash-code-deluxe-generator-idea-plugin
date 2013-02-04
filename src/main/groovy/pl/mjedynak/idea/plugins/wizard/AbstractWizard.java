@@ -13,15 +13,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.ui.components.JBRadioButton;
 import com.intellij.ui.components.panels.OpaquePanel;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -43,6 +46,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType.GUAVA;
+import static pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType.JAVA_7;
+
 public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     private static final Logger LOG = Logger.getInstance("#pl.mjedynak.idea.plugins.wizard");
 
@@ -62,6 +68,7 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
             updateStep();
         }
     };
+    private EqualsAndHashCodeType type;
 
     public AbstractWizard(final String title, final Component dialogParent) {
         super(dialogParent, true);
@@ -69,9 +76,10 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
         initWizard(title);
     }
 
-    public AbstractWizard(final String title, final Project project) {
+    public AbstractWizard(final String title, final Project project, EqualsAndHashCodeType type) {
         super(project, true);
         mySteps = new ArrayList<T>();
+        this.type = type;
         initWizard(title);
     }
 
@@ -258,7 +266,52 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
         final JPanel panel = new JPanel(new BorderLayout());
         panel.add(iconPanel, BorderLayout.WEST);
         panel.add(myContentPanel, BorderLayout.CENTER);
+
+        JBRadioButton rbJava7 = createJava7RadioButton();
+        JBRadioButton rbGuava = createGuavaRadioButton();
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.add(rbJava7);
+        buttonsPanel.add(rbGuava);
+
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(rbJava7);
+        buttonGroup.add(rbGuava);
+
+        panel.add(buttonsPanel, BorderLayout.SOUTH);
+
+        setButtonSelectedByDefault(rbJava7, rbGuava);
+
         return panel;
+    }
+
+    private JBRadioButton createGuavaRadioButton() {
+        JBRadioButton rbGuava = new JBRadioButton("Guava");
+        rbGuava.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                type = GUAVA;
+            }
+        });
+        return rbGuava;
+    }
+
+    private JBRadioButton createJava7RadioButton() {
+        JBRadioButton rbJava7 = new JBRadioButton("Java 7");
+        rbJava7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                type = JAVA_7;
+            }
+        });
+        return rbJava7;
+    }
+
+    private void setButtonSelectedByDefault(JBRadioButton rbJava7, JBRadioButton rbGuava) {
+        if (type == JAVA_7) {
+            rbJava7.setSelected(true);
+        } else {
+            rbGuava.setSelected(true);
+        }
     }
 
     public int getCurrentStep() {
@@ -462,6 +515,10 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
 
     protected boolean isCurrentStep(final T step) {
         return step != null && getCurrentStepComponent() == step.getComponent();
+    }
+
+    public EqualsAndHashCodeType getType() {
+        return type;
     }
 }
 
