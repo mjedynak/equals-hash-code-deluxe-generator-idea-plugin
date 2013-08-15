@@ -34,8 +34,8 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
 
     GenerateEqualsHashCodeDeluxeActionHandler actionHandler
 
-    HashCodeGenerator guavaHashCodeGenerator = Mock()
-    EqualsGenerator guavaEqualsGenerator = Mock()
+    HashCodeGenerator hashCodeGenerator = Mock()
+    EqualsGenerator equalsGenerator = Mock()
     GenerateEqualsHashCodeDeluxeWizardFactory factory = Mock()
     TypeChooser typeChooser = Mock()
 
@@ -55,7 +55,7 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
     ClassMember[] result
 
     def setup() {
-        actionHandler = new GenerateEqualsHashCodeDeluxeActionHandler(guavaHashCodeGenerator, guavaEqualsGenerator, factory, typeChooser)
+        actionHandler = new GenerateEqualsHashCodeDeluxeActionHandler(hashCodeGenerator, equalsGenerator, factory, typeChooser)
 
         typeChooser.chooseType(psiClass) >> JAVA_7
 
@@ -173,8 +173,8 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
 
     def "returns list with generated methods as list of GenerationInfo objects"() {
         actionHandler.type = JAVA_7
-        guavaEqualsGenerator.equalsMethod(null, psiClass, JAVA_7.equalsMethodName()) >> equalsMethod
-        guavaHashCodeGenerator.hashCodeMethod(null, JAVA_7.hashCodeMethodName()) >> hashCodeMethod
+        equalsGenerator.equalsMethod(null, psiClass, JAVA_7.equalsMethodName()) >> equalsMethod
+        hashCodeGenerator.hashCodeMethod(null, psiClass, JAVA_7.hashCodeMethodName()) >> hashCodeMethod
 
         def list = Mock(List)
         OverrideImplementUtil.metaClass.'static'.convert2GenerationInfos = { Collection collection ->

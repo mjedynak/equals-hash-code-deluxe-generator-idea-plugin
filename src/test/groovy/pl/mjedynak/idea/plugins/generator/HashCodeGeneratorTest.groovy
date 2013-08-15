@@ -3,14 +3,18 @@ package pl.mjedynak.idea.plugins.generator
 import com.intellij.openapi.project.Project
 import com.intellij.pom.java.LanguageLevel
 import com.intellij.psi.JavaPsiFacade
+import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiField
 import com.intellij.psi.impl.PsiElementFactoryImpl
 import com.intellij.psi.impl.source.PsiMethodImpl
+import pl.mjedynak.idea.plugins.psi.ParentClassChecker
 import spock.lang.Specification
 
 class HashCodeGeneratorTest extends Specification {
 
-    HashCodeGenerator hashCodeGenerator = new HashCodeGenerator()
+    ParentClassChecker parentClassChecker = Mock()
+    HashCodeGenerator hashCodeGenerator = new HashCodeGenerator(parentClassChecker)
+    PsiClass psiClass = Mock()
     PsiField psiField = Mock()
     PsiField psiField2 = Mock()
     JavaPsiFacade javaPsiFacade = Mock()
@@ -29,7 +33,7 @@ class HashCodeGeneratorTest extends Specification {
         elementFactory.createMethodFromText('@Override public int hashCode() {return Objects.hash(field);}', null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
-        def result = hashCodeGenerator.hashCodeMethod([psiField], hashCodeMethodName)
+        def result = hashCodeGenerator.hashCodeMethod([psiField], psiClass, hashCodeMethodName)
 
         then:
         result == psiMethod
@@ -44,7 +48,21 @@ class HashCodeGeneratorTest extends Specification {
         elementFactory.createMethodFromText('@Override public int hashCode() {return Objects.hashCode(field,anotherField);}', null, LanguageLevel.JDK_1_6) >> psiMethod
 
         when:
-        def result = hashCodeGenerator.hashCodeMethod([psiField, psiField2], hashCodeMethodName)
+        def result = hashCodeGenerator.hashCodeMethod([psiField, psiField2], psiClass, hashCodeMethodName)
+
+        then:
+        result == psiMethod
+    }
+
+    def "creates hashCode method with super call when parent class checker says so"() {
+        parentClassChecker.hasParentClassWithOverriddenHashCodeMethod(psiClass) >> true
+        String fieldName = 'field'
+        psiField.name >> fieldName
+        String hashCodeMethodName = 'hash'
+        elementFactory.createMethodFromText('@Override public int hashCode() {return 31 * super.hashCode() + Objects.hash(field);}', null, LanguageLevel.JDK_1_6) >> psiMethod
+
+        when:
+        def result = hashCodeGenerator.hashCodeMethod([psiField], psiClass, hashCodeMethodName)
 
         then:
         result == psiMethod
@@ -52,7 +70,7 @@ class HashCodeGeneratorTest extends Specification {
 
     def "returns null if list is empty"() {
         when:
-        def result = hashCodeGenerator.hashCodeMethod([], 'anyString')
+        def result = hashCodeGenerator.hashCodeMethod([], psiClass, 'anyString')
 
         then:
         result == null

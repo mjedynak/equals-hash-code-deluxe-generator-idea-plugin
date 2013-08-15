@@ -21,14 +21,15 @@ import pl.mjedynak.idea.plugins.wizard.GenerateEqualsHashCodeDeluxeWizard
 class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBase {
 
     static final String METHODS_DEFINED_FOR_ANONYMOUS_CLASS = 'Methods "boolean equals(Object)" or "int hashCode()" are already defined \nfor this anonymous class. Do you want to delete them and proceed?'
+    // TODO: parameter {0} is not substituted
     static final String METHODS_DEFINED_FOR_CLASS = 'Methods "boolean equals(Object)" or "int hashCode()" are already defined\nfor class {0}. Do you want to delete them and proceed?'
     static final String TITLE = 'generate.equals.and.hashcode.already.defined.title'
 
-    static final PsiElementClassMember[] DUMMY_RESULT = new PsiElementClassMember[1]
-    static final String ONLY_STATIC_FIELDS_ERROR = 'No fields to include in equals/hashCode have been found' //cannot return empty array, but this result won't be used anyway
+    static final PsiElementClassMember[] DUMMY_RESULT = new PsiElementClassMember[1] //cannot return empty array, but this result won't be used anyway
+    static final String ONLY_STATIC_FIELDS_ERROR = 'No fields to include in equals/hashCode have been found'
 
-    HashCodeGenerator guavaHashCodeGenerator
-    EqualsGenerator guavaEqualsGenerator
+    HashCodeGenerator hashCodeGenerator
+    EqualsGenerator equalsGenerator
     TypeChooser typeChooser
     EqualsAndHashCodeType type
     GenerateEqualsHashCodeDeluxeWizardFactory factory
@@ -37,11 +38,11 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
     PsiField[] hashCodeFields = null
 
 
-    GenerateEqualsHashCodeDeluxeActionHandler(HashCodeGenerator guavaHashCodeGenerator, EqualsGenerator guavaEqualsGenerator,
+    GenerateEqualsHashCodeDeluxeActionHandler(HashCodeGenerator hashCodeGenerator, EqualsGenerator equalsGenerator,
                                               GenerateEqualsHashCodeDeluxeWizardFactory factory, TypeChooser typeChooser) {
         super('')
-        this.guavaHashCodeGenerator = guavaHashCodeGenerator
-        this.guavaEqualsGenerator = guavaEqualsGenerator
+        this.hashCodeGenerator = hashCodeGenerator
+        this.equalsGenerator = equalsGenerator
         this.typeChooser = typeChooser
         this.factory = factory
     }
@@ -51,8 +52,8 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
 
         String equalsMethodName = type.equalsMethodName()
         String hashCodeMethodName = type.hashCodeMethodName()
-        def hashCodeMethod = guavaHashCodeGenerator.hashCodeMethod(hashCodeFields as List, hashCodeMethodName)
-        def equalsMethod = guavaEqualsGenerator.equalsMethod(equalsFields as List, psiClass, equalsMethodName)
+        def hashCodeMethod = hashCodeGenerator.hashCodeMethod(hashCodeFields as List, psiClass, hashCodeMethodName)
+        def equalsMethod = equalsGenerator.equalsMethod(equalsFields as List, psiClass, equalsMethodName)
 
         OverrideImplementUtil.convert2GenerationInfos([hashCodeMethod, equalsMethod])
     }

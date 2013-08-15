@@ -3,8 +3,15 @@ package pl.mjedynak.idea.plugins.generator
 import com.intellij.pom.java.LanguageLevel
 import com.intellij.psi.*
 import org.jetbrains.annotations.NotNull
+import pl.mjedynak.idea.plugins.psi.ParentClassChecker
 
 class EqualsGenerator {
+
+    private ParentClassChecker parentClassChecker
+
+    EqualsGenerator(ParentClassChecker parentClassChecker) {
+        this.parentClassChecker = parentClassChecker
+    }
 
     PsiMethod equalsMethod(@NotNull List<PsiField> equalsPsiFields, PsiClass psiClass, String equalsMethodName) {
         if (!equalsPsiFields.isEmpty()) {
@@ -13,7 +20,7 @@ class EqualsGenerator {
             methodText << '@Override public boolean equals(Object obj) {'
             methodText << ' if (this == obj) {return true;}'
             methodText << ' if (obj == null || getClass() != obj.getClass()) {return false;}'
-            if (isSubclass(psiClass)) {
+            if (parentClassChecker.hasParentClassWithOverriddenEqualsMethod(psiClass)) {
                 methodText << ' if (!super.equals(obj)) {return false;}'
             }
             methodText << " final ${psiClass.name} other = (${psiClass.name}) obj;"
@@ -27,10 +34,6 @@ class EqualsGenerator {
             methodText << ';}'
             factory.createMethodFromText(methodText.toString(), null, LanguageLevel.JDK_1_6)
         }
-    }
-
-    private boolean isSubclass(PsiClass psiClass) {
-        psiClass.extendsList?.referencedTypes?.length > 0
     }
 
     private boolean isNotLastField(@NotNull List<PsiField> equalsPsiFields, int index) {

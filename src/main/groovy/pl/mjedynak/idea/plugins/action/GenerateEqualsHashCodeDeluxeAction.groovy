@@ -6,6 +6,9 @@ import org.picocontainer.defaults.DefaultPicoContainer
 import pl.mjedynak.idea.plugins.factory.GenerateEqualsHashCodeDeluxeWizardFactory
 import pl.mjedynak.idea.plugins.generator.EqualsGenerator
 import pl.mjedynak.idea.plugins.generator.HashCodeGenerator
+import pl.mjedynak.idea.plugins.psi.EqualsFinder
+import pl.mjedynak.idea.plugins.psi.HashCodeFinder
+import pl.mjedynak.idea.plugins.psi.ParentClassChecker
 
 class GenerateEqualsHashCodeDeluxeAction extends BaseGenerateAction {
 
@@ -14,12 +17,15 @@ class GenerateEqualsHashCodeDeluxeAction extends BaseGenerateAction {
     private static GenerateEqualsHashCodeDeluxeActionHandler handler
 
     static {
+        picoContainer.registerComponentImplementation(EqualsFinder)
+        picoContainer.registerComponentImplementation(HashCodeFinder)
+        picoContainer.registerComponentImplementation(ParentClassChecker)
         picoContainer.registerComponentImplementation(HashCodeGenerator)
         picoContainer.registerComponentImplementation(EqualsGenerator)
         picoContainer.registerComponentImplementation(TypeChooser)
         picoContainer.registerComponentImplementation(GenerateEqualsHashCodeDeluxeWizardFactory)
         picoContainer.registerComponentImplementation(GenerateEqualsHashCodeDeluxeActionHandler)
-        handler = picoContainer.getComponentInstanceOfType(GenerateEqualsHashCodeDeluxeActionHandler)
+        handler = picoContainer.getComponentInstanceOfType(GenerateEqualsHashCodeDeluxeActionHandler.class)
     }
 
 

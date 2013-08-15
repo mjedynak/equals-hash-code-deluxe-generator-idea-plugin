@@ -1,5 +1,8 @@
 package pl.mjedynak.idea.plugins.model
 
+import groovy.transform.CompileStatic
+
+@CompileStatic
 enum EqualsAndHashCodeType {
     JAVA_7(JAVA_7_EQUALS_METHOD, JAVA_7_HASH_CODE_METHOD),
     GUAVA(GUAVA_EQUALS_METHOD, GUAVA_HASH_CODE_METHOD)

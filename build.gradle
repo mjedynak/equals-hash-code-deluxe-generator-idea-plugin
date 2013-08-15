@@ -1,13 +1,13 @@
 apply plugin: 'groovy'
-apply plugin: 'codenarc'
+//apply plugin: 'codenarc'
 apply plugin: 'idea'
 apply from: 'idea.gradle'
 //apply from: 'cobertura.gradle'
 
 // --- properties ---
-ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 12.0'
-ideaJdk = 'IDEA IC-117.418'
-sourceCompatibility = 1.6
+ext.ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 12.1'
+ext.ideaJdk = 'IDEA IC-129.354'
+ext.sourceCompatibility = 1.6
 // --- properties ---
 
 // --- cobertura ---
@@ -23,9 +23,9 @@ repositories {
 
 dependencies {
     compile fileTree(dir: ideaInstallationPath + '/lib', include: '*.jar')
-    testCompile 'org.spockframework:spock-core:0.6-groovy-1.8'
+    compile 'org.codehaus.groovy:groovy-all:2.0.6'
+    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
     testCompile 'org.objenesis:objenesis:1.2'
-    groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: '1.8.8'
 }
 
 metaInf << files('/META-INF/plugin.xml')
