@@ -9,13 +9,18 @@
       </ul>
       ]]>
     </description>
-    <version>1.0.6-SNAPSHOT</version>
+    <version>1.0.6</version>
     <change-notes>
         <![CDATA[
+           version 1.0.6
+           <br/>
+           <ul>
+           <li>Fixed bug with incorrect call to parent class <i>https://github.com/mjedynak/EqualsHashCodeDeluxeGenerator/issues/11</i></li>
+           </ul>
            version 1.0.5
            <br/>
            <ul>
-           <li>Added ability to choose between Java 7 and Guava </li>
+           <li>Added ability to choose between Java 7 and Guava</li>
            </ul>
            version 1.0.4
            <br/>
@@ -41,7 +46,7 @@
     </change-notes>
     <vendor email="m.jedynak [at] gmail.com">Michal Jedynak
     </vendor>
-    <idea-version since-build="107.105"/>
+    <idea-version since-build="129.354"/>
 
     <application-components>
     </application-components>
