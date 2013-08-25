@@ -1,5 +1,6 @@
 apply plugin: 'groovy'
 //apply plugin: 'codenarc'
+apply plugin: "jacoco"
 apply plugin: 'idea'
 apply from: 'idea.gradle'
 //apply from: 'cobertura.gradle'
@@ -15,6 +16,10 @@ ext.sourceCompatibility = 1.6
 //check.dependsOn cobertura
 // --- cobertura ---
 
+
+jacocoTestReport {
+    additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
+}
 
 repositories {
     mavenCentral()
