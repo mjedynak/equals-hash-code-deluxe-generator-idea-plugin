@@ -9,9 +9,14 @@
       </ul>
       ]]>
     </description>
-    <version>1.0.7-SNAPSHOT</version>
+    <version>1.0.7</version>
     <change-notes>
         <![CDATA[
+           version 1.0.7
+           <br/>
+           <ul>
+           <li>Fixed bug with incorrect class name shown when asking about permission to delete existing equals/hashCode methods</li>
+           </ul>
            version 1.0.6
            <br/>
            <ul>
