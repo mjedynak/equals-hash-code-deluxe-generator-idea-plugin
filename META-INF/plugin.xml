@@ -9,9 +9,14 @@
       </ul>
       ]]>
     </description>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <change-notes>
         <![CDATA[
+           version 1.0.8
+           <br/>
+           <ul>
+           <li>Fixed bug with crashing when no fields were chosen for hashCode method <i>https://github.com/mjedynak/EqualsHashCodeDeluxeGenerator/issues/12</i></li>
+           </ul>
            version 1.0.7
            <br/>
            <ul>
@@ -51,7 +56,7 @@
     </change-notes>
     <vendor email="m.jedynak [at] gmail.com">Michal Jedynak
     </vendor>
-    <idea-version since-build="129.354"/>
+    <idea-version since-build="133.193"/>
 
     <application-components>
     </application-components>

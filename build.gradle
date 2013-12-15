@@ -6,8 +6,8 @@ apply from: 'idea.gradle'
 //apply from: 'cobertura.gradle'
 
 // --- properties ---
-ext.ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 12.1'
-ext.ideaJdk = 'IDEA IC-129.713'
+ext.ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 13.0'
+ext.ideaJdk = 'IDEA IC-133.193'
 sourceCompatibility = 1.6
 // --- properties ---
 

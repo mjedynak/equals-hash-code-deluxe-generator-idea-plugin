@@ -68,11 +68,13 @@ class HashCodeGeneratorTest extends Specification {
         result == psiMethod
     }
 
-    def "returns null if list is empty"() {
+    def "creates hashCode method that returns 0 if list is empty"() {
+        elementFactory.createMethodFromText('@Override public int hashCode() {return 0;}', null, LanguageLevel.JDK_1_6) >> psiMethod
+
         when:
         def result = hashCodeGenerator.hashCodeMethod([], psiClass, 'anyString')
 
         then:
-        result == null
+        result == psiMethod
     }
 }
