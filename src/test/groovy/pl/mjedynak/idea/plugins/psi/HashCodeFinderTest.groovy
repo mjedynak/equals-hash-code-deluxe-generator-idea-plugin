@@ -6,7 +6,7 @@ import spock.lang.Specification
 
 class HashCodeFinderTest extends Specification {
 
-    HashCodeFinder finder = new HashCodeFinder()
+    HashCodeMethodFinder finder = new HashCodeMethodFinder()
 
     PsiClass psiClass = Mock()
     PsiMethodImpl method = Mock()
@@ -23,7 +23,7 @@ class HashCodeFinderTest extends Specification {
         hasNoParameters()
 
         when:
-        boolean result = finder.hasHashCodeMethod(psiClass)
+        boolean result = finder.hasMethod(psiClass)
 
         then:
         result == true
@@ -35,7 +35,7 @@ class HashCodeFinderTest extends Specification {
         hasNoParameters()
 
         when:
-        boolean result = finder.hasHashCodeMethod(psiClass)
+        boolean result = finder.hasMethod(psiClass)
 
         then:
         result == false
@@ -47,7 +47,7 @@ class HashCodeFinderTest extends Specification {
         hasNoParameters()
 
         when:
-        boolean result = finder.hasHashCodeMethod(psiClass)
+        boolean result = finder.hasMethod(psiClass)
 
         then:
         result == false
@@ -59,7 +59,7 @@ class HashCodeFinderTest extends Specification {
         hasParameters()
 
         when:
-        boolean result = finder.hasHashCodeMethod(psiClass)
+        boolean result = finder.hasMethod(psiClass)
 
         then:
         result == false
@@ -72,7 +72,7 @@ class HashCodeFinderTest extends Specification {
         hasNoParameters()
 
         when:
-        boolean result = finder.hasHashCodeMethod(psiClass)
+        boolean result = finder.hasMethod(psiClass)
 
         then:
         result == false

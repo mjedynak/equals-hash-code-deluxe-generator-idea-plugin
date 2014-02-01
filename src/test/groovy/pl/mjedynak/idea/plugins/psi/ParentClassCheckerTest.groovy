@@ -7,76 +7,73 @@ import spock.lang.Specification
 
 class ParentClassCheckerTest extends Specification {
 
-    EqualsFinder equalsFinder = Mock()
-    HashCodeFinder hashCodeFinder = Mock()
+    MethodFinder methodFinder = Mock()
     PsiClass psiClass = Mock()
     PsiClass parentPsiClass = Mock()
-    ParentClassChecker checker = new ParentClassChecker(equalsFinder, hashCodeFinder)
+    ParentClassChecker checker = new ParentClassChecker()
 
-    def "should determine that given class has parent class with overridden equals method"() {
+    def "should determine that given class has class with overridden method in its inheritance hierarchy"() {
         PsiReferenceList extendsList = Mock()
         psiClass.extendsList >> extendsList
         PsiClassType psiClassType = Mock()
         extendsList.referencedTypes >> [psiClassType]
         psiClassType.resolve() >> parentPsiClass
-        equalsFinder.hasEqualsMethod(parentPsiClass) >> true
+        methodFinder.hasMethod(parentPsiClass) >> false
+        PsiReferenceList parentExtendsList = Mock()
+        parentPsiClass.extendsList >> parentExtendsList
+        PsiClassType parentPsiClassType = Mock()
+        parentExtendsList.referencedTypes >> [parentPsiClassType]
+        PsiClass grandParentPsiClass = Mock()
+        parentPsiClassType.resolve() >> grandParentPsiClass
+        methodFinder.hasMethod(grandParentPsiClass) >> true
 
         when:
-        boolean result = checker.hasParentClassWithOverriddenEqualsMethod(psiClass)
+        boolean result = checker.hasClassWithOverriddenMethodInInheritanceHierarchy(methodFinder, psiClass)
 
         then:
         result == true
     }
 
-    def "should return false for 'equals' if there is no parent class"() {
-        PsiReferenceList extendsList = Mock()
-        psiClass.extendsList >> extendsList
-        extendsList.referencedTypes >> []
-
-        when:
-        boolean result = checker.hasParentClassWithOverriddenEqualsMethod(psiClass)
-
-        then:
-        result == false
-    }
-
-    def "should return false if finder does not find correct 'equals' in parent"() {
+    def "should determine that given class has parent class with overridden method"() {
         PsiReferenceList extendsList = Mock()
         psiClass.extendsList >> extendsList
         PsiClassType psiClassType = Mock()
         extendsList.referencedTypes >> [psiClassType]
         psiClassType.resolve() >> parentPsiClass
-        equalsFinder.hasEqualsMethod(parentPsiClass) >> false
+        methodFinder.hasMethod(parentPsiClass) >> true
 
         when:
-        boolean result = checker.hasParentClassWithOverriddenEqualsMethod(psiClass)
-
-        then:
-        result == false
-    }
-
-    def "should determine that given class has parent class with overridden hashCode method"() {
-        PsiReferenceList extendsList = Mock()
-        psiClass.extendsList >> extendsList
-        PsiClassType psiClassType = Mock()
-        extendsList.referencedTypes >> [psiClassType]
-        psiClassType.resolve() >> parentPsiClass
-        hashCodeFinder.hasHashCodeMethod(parentPsiClass) >> true
-
-        when:
-        boolean result = checker.hasParentClassWithOverriddenHashCodeMethod(psiClass)
+        boolean result = checker.hasClassWithOverriddenMethodInInheritanceHierarchy(methodFinder, psiClass)
 
         then:
         result == true
     }
 
-    def "should return false for 'hash code' method if there is no parent class"() {
+    def "should return false if there is no parent class"() {
         PsiReferenceList extendsList = Mock()
         psiClass.extendsList >> extendsList
         extendsList.referencedTypes >> []
 
         when:
-        boolean result = checker.hasParentClassWithOverriddenHashCodeMethod(psiClass)
+        boolean result = checker.hasClassWithOverriddenMethodInInheritanceHierarchy(methodFinder, psiClass)
+
+        then:
+        result == false
+    }
+
+    def "should return false if finder does not find correct method in parent"() {
+        PsiReferenceList extendsList = Mock()
+        psiClass.extendsList >> extendsList
+        PsiClassType psiClassType = Mock()
+        extendsList.referencedTypes >> [psiClassType]
+        psiClassType.resolve() >> parentPsiClass
+        methodFinder.hasMethod(parentPsiClass) >> false
+        PsiReferenceList parentExtendsList = Mock()
+        parentPsiClass.extendsList >> parentExtendsList
+        parentExtendsList.referencedTypes >> []
+
+        when:
+        boolean result = checker.hasClassWithOverriddenMethodInInheritanceHierarchy(methodFinder, psiClass)
 
         then:
         result == false

@@ -7,13 +7,15 @@ import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiField
 import com.intellij.psi.impl.PsiElementFactoryImpl
 import com.intellij.psi.impl.source.PsiMethodImpl
+import pl.mjedynak.idea.plugins.psi.HashCodeMethodFinder
 import pl.mjedynak.idea.plugins.psi.ParentClassChecker
 import spock.lang.Specification
 
 class HashCodeGeneratorTest extends Specification {
 
     ParentClassChecker parentClassChecker = Mock()
-    HashCodeGenerator hashCodeGenerator = new HashCodeGenerator(parentClassChecker)
+    HashCodeMethodFinder finder = Mock()
+    HashCodeGenerator hashCodeGenerator = new HashCodeGenerator(parentClassChecker, finder)
     PsiClass psiClass = Mock()
     PsiField psiField = Mock()
     PsiField psiField2 = Mock()
@@ -22,7 +24,7 @@ class HashCodeGeneratorTest extends Specification {
     PsiMethodImpl psiMethod = Mock()
 
     def setup() {
-        JavaPsiFacade.metaClass.'static'.getInstance = { Project project -> javaPsiFacade}
+        JavaPsiFacade.metaClass.static.getInstance = { Project project -> javaPsiFacade}
         javaPsiFacade.elementFactory >> elementFactory
     }
 
@@ -55,7 +57,7 @@ class HashCodeGeneratorTest extends Specification {
     }
 
     def "creates hashCode method with super call when parent class checker says so"() {
-        parentClassChecker.hasParentClassWithOverriddenHashCodeMethod(psiClass) >> true
+        parentClassChecker.hasClassWithOverriddenMethodInInheritanceHierarchy(finder, psiClass) >> true
         String fieldName = 'field'
         psiField.name >> fieldName
         String hashCodeMethodName = 'hash'

@@ -3,14 +3,17 @@ package pl.mjedynak.idea.plugins.generator
 import com.intellij.pom.java.LanguageLevel
 import com.intellij.psi.*
 import org.jetbrains.annotations.NotNull
+import pl.mjedynak.idea.plugins.psi.HashCodeMethodFinder
 import pl.mjedynak.idea.plugins.psi.ParentClassChecker
 
 class HashCodeGenerator {
 
     private ParentClassChecker parentClassChecker
+    private HashCodeMethodFinder hashCodeMethodFinder
 
-    HashCodeGenerator(ParentClassChecker parentClassChecker) {
+    HashCodeGenerator(ParentClassChecker parentClassChecker, HashCodeMethodFinder hashCodeMethodFinder) {
         this.parentClassChecker = parentClassChecker
+        this.hashCodeMethodFinder = hashCodeMethodFinder
     }
 
     PsiMethod hashCodeMethod(@NotNull List<PsiField> hashCodePsiFields, PsiClass psiClass, String hashCodeMethodName) {
@@ -19,7 +22,7 @@ class HashCodeGenerator {
         PsiElementFactory factory = getFactory(psiClass)
         if (!hashCodePsiFields.isEmpty()) {
             String fieldsString = hashCodePsiFields*.name.join(',')
-            if (parentClassChecker.hasParentClassWithOverriddenHashCodeMethod(psiClass)) {
+            if (parentClassChecker.hasClassWithOverriddenMethodInInheritanceHierarchy(hashCodeMethodFinder, psiClass)) {
                 methodText << '31 * super.hashCode() + '
             }
             methodText << "Objects.${hashCodeMethodName}(${fieldsString});}"

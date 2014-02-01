@@ -1,31 +1,19 @@
 package pl.mjedynak.idea.plugins.psi
 
 import com.intellij.psi.PsiClass
+import groovy.transform.CompileStatic
 
+@CompileStatic
 class ParentClassChecker {
 
-    private EqualsFinder equalsFinder
-    private HashCodeFinder hashCodeFinder
-
-    ParentClassChecker(EqualsFinder equalsFinder, HashCodeFinder hashCodeFinder) {
-        this.equalsFinder = equalsFinder
-        this.hashCodeFinder = hashCodeFinder
-    }
-
-    boolean hasParentClassWithOverriddenEqualsMethod(PsiClass psiClass) {
+    boolean hasClassWithOverriddenMethodInInheritanceHierarchy(MethodFinder finder, PsiClass psiClass) {
         boolean result = false
         PsiClass psiParentClass = getParentClass(psiClass)
         if (psiParentClass != null) {
-            result = equalsFinder.hasEqualsMethod(psiParentClass)
-        }
-        result
-    }
-
-    boolean hasParentClassWithOverriddenHashCodeMethod(PsiClass psiClass) {
-        boolean result = false
-        PsiClass psiParentClass = getParentClass(psiClass)
-        if (psiParentClass != null) {
-            result = hashCodeFinder.hasHashCodeMethod(psiParentClass)
+            result = finder.hasMethod(psiParentClass)
+            if (!result) {
+                return hasClassWithOverriddenMethodInInheritanceHierarchy(finder, psiParentClass)
+            }
         }
         result
     }

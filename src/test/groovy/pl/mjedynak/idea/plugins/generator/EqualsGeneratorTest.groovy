@@ -7,13 +7,15 @@ import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiField
 import com.intellij.psi.impl.PsiElementFactoryImpl
 import com.intellij.psi.impl.source.PsiMethodImpl
+import pl.mjedynak.idea.plugins.psi.EqualsMethodFinder
 import pl.mjedynak.idea.plugins.psi.ParentClassChecker
 import spock.lang.Specification
 
 class EqualsGeneratorTest extends Specification {
 
     ParentClassChecker parentClassChecker = Mock()
-    EqualsGenerator equalsGenerator = new EqualsGenerator(parentClassChecker)
+    EqualsMethodFinder finder = Mock()
+    EqualsGenerator equalsGenerator = new EqualsGenerator(parentClassChecker, finder)
     PsiField psiField = Mock()
     PsiField psiField2 = Mock()
     JavaPsiFacade javaPsiFacade = Mock()
@@ -23,7 +25,7 @@ class EqualsGeneratorTest extends Specification {
     String type = 'String'
 
     def setup() {
-        JavaPsiFacade.metaClass.'static'.getInstance = { Project project -> javaPsiFacade}
+        JavaPsiFacade.metaClass.static.getInstance = { Project project -> javaPsiFacade}
         javaPsiFacade.elementFactory >> elementFactory
         psiClass.name >> type
         psiClass.extendsListTypes >> []
@@ -49,7 +51,7 @@ class EqualsGeneratorTest extends Specification {
         String fieldName = 'field'
         psiField.name >> fieldName
         String equalsMethodName = 'equals'
-        parentClassChecker.hasParentClassWithOverriddenEqualsMethod(psiClass) >> true
+        parentClassChecker.hasClassWithOverriddenMethodInInheritanceHierarchy(finder, psiClass) >> true
 
         elementFactory.createMethodFromText('@Override public boolean equals(Object obj) { if (this == obj) {return true;} ' +
                 'if (obj == null || getClass() != obj.getClass()) {return false;} ' +

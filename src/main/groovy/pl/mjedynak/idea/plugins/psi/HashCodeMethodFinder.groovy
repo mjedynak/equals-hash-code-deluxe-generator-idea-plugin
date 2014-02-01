@@ -6,8 +6,8 @@ import com.intellij.psi.PsiModifier
 import groovy.transform.CompileStatic
 
 @CompileStatic
-class HashCodeFinder {
-    boolean hasHashCodeMethod(PsiClass psiClass) {
+class HashCodeMethodFinder implements MethodFinder {
+    boolean hasMethod(PsiClass psiClass) {
         psiClass.findMethodsByName("hashCode", false).any { PsiMethod method ->
             isPublic(method) && isNotStatic(method) && hasNoParameters(method) && returnsInt(method)
         }

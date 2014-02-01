@@ -3,14 +3,17 @@ package pl.mjedynak.idea.plugins.generator
 import com.intellij.pom.java.LanguageLevel
 import com.intellij.psi.*
 import org.jetbrains.annotations.NotNull
+import pl.mjedynak.idea.plugins.psi.EqualsMethodFinder
 import pl.mjedynak.idea.plugins.psi.ParentClassChecker
 
 class EqualsGenerator {
 
     private ParentClassChecker parentClassChecker
+    private EqualsMethodFinder equalsMethodFinder
 
-    EqualsGenerator(ParentClassChecker parentClassChecker) {
+    EqualsGenerator(ParentClassChecker parentClassChecker, EqualsMethodFinder equalsMethodFinder) {
         this.parentClassChecker = parentClassChecker
+        this.equalsMethodFinder = equalsMethodFinder
     }
 
     PsiMethod equalsMethod(@NotNull List<PsiField> equalsPsiFields, PsiClass psiClass, String equalsMethodName) {
@@ -20,7 +23,7 @@ class EqualsGenerator {
             methodText << '@Override public boolean equals(Object obj) {'
             methodText << ' if (this == obj) {return true;}'
             methodText << ' if (obj == null || getClass() != obj.getClass()) {return false;}'
-            if (parentClassChecker.hasParentClassWithOverriddenEqualsMethod(psiClass)) {
+            if (parentClassChecker.hasClassWithOverriddenMethodInInheritanceHierarchy(equalsMethodFinder, psiClass)) {
                 methodText << ' if (!super.equals(obj)) {return false;}'
             }
             methodText << " final ${psiClass.name} other = (${psiClass.name}) obj;"

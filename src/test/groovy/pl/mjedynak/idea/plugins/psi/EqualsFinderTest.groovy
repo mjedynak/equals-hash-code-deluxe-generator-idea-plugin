@@ -6,7 +6,7 @@ import spock.lang.Specification
 
 class EqualsFinderTest extends Specification {
 
-    EqualsFinder finder = new EqualsFinder()
+    EqualsMethodFinder finder = new EqualsMethodFinder()
 
     PsiClass psiClass = Mock()
     PsiMethodImpl method = Mock()
@@ -23,7 +23,7 @@ class EqualsFinderTest extends Specification {
         hasObjectAsParameter()
 
         when:
-        boolean result = finder.hasEqualsMethod(psiClass)
+        boolean result = finder.hasMethod(psiClass)
 
         then:
         result == true
@@ -35,7 +35,7 @@ class EqualsFinderTest extends Specification {
         hasObjectAsParameter()
 
         when:
-        boolean result = finder.hasEqualsMethod(psiClass)
+        boolean result = finder.hasMethod(psiClass)
 
         then:
         result == false
@@ -47,7 +47,7 @@ class EqualsFinderTest extends Specification {
         hasObjectAsParameter()
 
         when:
-        boolean result = finder.hasEqualsMethod(psiClass)
+        boolean result = finder.hasMethod(psiClass)
 
         then:
         result == false
@@ -59,7 +59,7 @@ class EqualsFinderTest extends Specification {
         hasFileAsParameter()
 
         when:
-        boolean result = finder.hasEqualsMethod(psiClass)
+        boolean result = finder.hasMethod(psiClass)
 
         then:
         result == false
@@ -71,7 +71,7 @@ class EqualsFinderTest extends Specification {
         hasMoreThanOneParameter()
 
         when:
-        boolean result = finder.hasEqualsMethod(psiClass)
+        boolean result = finder.hasMethod(psiClass)
 
         then:
         result == false
@@ -84,7 +84,7 @@ class EqualsFinderTest extends Specification {
         hasObjectAsParameter()
 
         when:
-        boolean result = finder.hasEqualsMethod(psiClass)
+        boolean result = finder.hasMethod(psiClass)
 
         then:
         result == false

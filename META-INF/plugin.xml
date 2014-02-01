@@ -9,13 +9,18 @@
       </ul>
       ]]>
     </description>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
     <change-notes>
         <![CDATA[
+           version 1.0.9
+           <br/>
+           <ul>
+           <li><a href="https://github.com/mjedynak/EqualsHashCodeDeluxeGenerator/issues/13">Fixed bug with missing call to super class</a></li>
+           </ul>
            version 1.0.8
            <br/>
            <ul>
-           <li>Fixed bug with crashing when no fields were chosen for hashCode method <i>https://github.com/mjedynak/EqualsHashCodeDeluxeGenerator/issues/12</i></li>
+           <li><a href="https://github.com/mjedynak/EqualsHashCodeDeluxeGenerator/issues/12">Fixed bug with crashing when no fields were chosen for hashCode method</a></li>
            </ul>
            version 1.0.7
            <br/>
@@ -25,7 +30,7 @@
            version 1.0.6
            <br/>
            <ul>
-           <li>Fixed bug with incorrect call to parent class <i>https://github.com/mjedynak/EqualsHashCodeDeluxeGenerator/issues/11</i></li>
+           <li><a href="https://github.com/mjedynak/EqualsHashCodeDeluxeGenerator/issues/11">Fixed bug with incorrect call to parent class</a></li>
            </ul>
            version 1.0.5
            <br/>

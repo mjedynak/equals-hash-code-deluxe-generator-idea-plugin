@@ -7,9 +7,9 @@ import com.intellij.psi.PsiModifier
 import groovy.transform.CompileStatic
 
 @CompileStatic
-class EqualsFinder {
+class EqualsMethodFinder implements MethodFinder {
 
-    boolean hasEqualsMethod(PsiClass psiClass) {
+    boolean hasMethod(PsiClass psiClass) {
         psiClass.findMethodsByName("equals", false).any { PsiMethod method ->
             isPublic(method) && isNotStatic(method) && hasObjectAsParameter(method) && returnsBoolean(method)
         }
