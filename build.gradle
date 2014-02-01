@@ -3,7 +3,6 @@ apply plugin: 'groovy'
 apply plugin: "jacoco"
 apply plugin: 'idea'
 apply from: 'idea.gradle'
-//apply from: 'cobertura.gradle'
 
 // --- properties ---
 ext.ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 13.0'
@@ -11,19 +10,16 @@ ext.ideaJdk = 'IDEA IC-133.193'
 sourceCompatibility = 1.6
 // --- properties ---
 
-// --- cobertura ---
-//cobertura.dependsOn test
-//check.dependsOn cobertura
-// --- cobertura ---
 
 
 jacocoTestReport {
     additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
 }
 
+build.dependsOn jacocoTestReport
+
 repositories {
     mavenCentral()
-//    mavenRepo url: 'http://m2repo.spockframework.org/snapshots'
 }
 
 dependencies {
