@@ -25,7 +25,7 @@ class EqualsGeneratorTest extends Specification {
     String type = 'String'
 
     def setup() {
-        JavaPsiFacade.metaClass.static.getInstance = { Project project -> javaPsiFacade}
+        JavaPsiFacade.metaClass.static.getInstance = { Project project -> javaPsiFacade }
         javaPsiFacade.elementFactory >> elementFactory
         psiClass.name >> type
         psiClass.extendsListTypes >> []

@@ -24,7 +24,7 @@ class HashCodeGeneratorTest extends Specification {
     PsiMethodImpl psiMethod = Mock()
 
     def setup() {
-        JavaPsiFacade.metaClass.static.getInstance = { Project project -> javaPsiFacade}
+        JavaPsiFacade.metaClass.static.getInstance = { Project project -> javaPsiFacade }
         javaPsiFacade.elementFactory >> elementFactory
     }
 

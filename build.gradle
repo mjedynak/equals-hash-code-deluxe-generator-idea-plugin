@@ -1,5 +1,5 @@
 apply plugin: 'groovy'
-//apply plugin: 'codenarc'
+apply plugin: 'codenarc'
 apply plugin: "jacoco"
 apply plugin: 'idea'
 apply from: 'idea.gradle'
@@ -9,7 +9,6 @@ ext.ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Commu
 ext.ideaJdk = 'IDEA IC-133.193'
 sourceCompatibility = 1.6
 // --- properties ---
-
 
 
 jacocoTestReport {

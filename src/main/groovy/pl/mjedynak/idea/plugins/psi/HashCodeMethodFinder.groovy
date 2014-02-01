@@ -8,7 +8,7 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class HashCodeMethodFinder implements MethodFinder {
     boolean hasMethod(PsiClass psiClass) {
-        psiClass.findMethodsByName("hashCode", false).any { PsiMethod method ->
+        psiClass.findMethodsByName('hashCode', false).any { PsiMethod method ->
             isPublic(method) && isNotStatic(method) && hasNoParameters(method) && returnsInt(method)
         }
     }
@@ -18,7 +18,7 @@ class HashCodeMethodFinder implements MethodFinder {
     }
 
     private static boolean returnsInt(PsiMethod method) {
-        method.returnType.equalsToText("int")
+        method.returnType.equalsToText('int')
     }
 
     private static boolean isPublic(PsiMethod method) {
@@ -26,7 +26,7 @@ class HashCodeMethodFinder implements MethodFinder {
     }
 
     private static boolean hasNoParameters(PsiMethod method) {
-        method.getParameterList()?.parameters?.size() == 0
+        method.parameterList?.parameters?.size() == 0
     }
 
 }

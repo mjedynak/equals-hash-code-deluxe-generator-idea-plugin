@@ -59,13 +59,13 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
 
         typeChooser.chooseType(psiClass) >> JAVA_7
 
-        GenerateEqualsHelper.metaClass.'static'.getEqualsSignature = { Project project, GlobalSearchScope scope -> equalsMethodSignature }
-        GenerateEqualsHelper.metaClass.'static'.getHashCodeSignature = { hashCodeMethodSignature }
-        GenerateEqualsHelper.metaClass.'static'.findMethod = {PsiClass psiClass, MethodSignature methodSignature -> null}
-        CodeInsightBundle.metaClass.'static'.message = {String key -> 'anyString'}
-        Messages.metaClass.'static'.getQuestionIcon = {Mock(Icon)}
-        ApplicationManager.metaClass.'static'.getApplication = {application}
-        HintManager.metaClass.'static'.getInstance = {hintManager}
+        GenerateEqualsHelper.metaClass.static.getEqualsSignature = { Project project, GlobalSearchScope scope -> equalsMethodSignature }
+        GenerateEqualsHelper.metaClass.static.getHashCodeSignature = { hashCodeMethodSignature }
+        GenerateEqualsHelper.metaClass.static.findMethod = { PsiClass psiClass, MethodSignature methodSignature -> null }
+        CodeInsightBundle.metaClass.static.message = { String key -> 'anyString' }
+        Messages.metaClass.static.getQuestionIcon = { Mock(Icon) }
+        ApplicationManager.metaClass.static.getApplication = { application }
+        HintManager.metaClass.static.getInstance = { hintManager }
         factory.createWizard(project, psiClass, true, true, JAVA_7) >> wizard
     }
 
@@ -98,6 +98,7 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         fieldsFromWizardAreNotAssigned()
     }
 
+    @SuppressWarnings('UnnecessaryDefInMethodDeclaration') // bug in codenarc
     def "displays error message when class has only static fields"() {
         equalsAndHashCodeExist()
         userClicksYesInDeleteDialog()
@@ -177,7 +178,7 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         hashCodeGenerator.hashCodeMethod(null, psiClass, JAVA_7.hashCodeMethodName()) >> hashCodeMethod
 
         def list = Mock(List)
-        OverrideImplementUtil.metaClass.'static'.convert2GenerationInfos = { Collection collection ->
+        OverrideImplementUtil.metaClass.static.convert2GenerationInfos = { Collection collection ->
             if (collection == [hashCodeMethod, equalsMethod]) {
                 return list
             }
@@ -228,15 +229,15 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
     }
 
     def userClicksYesInDeleteDialog() {
-        Messages.metaClass.'static'.showYesNoDialog = {Project project, String message, String title, Icon icon -> OK_EXIT_CODE}
+        Messages.metaClass.static.showYesNoDialog = { Project project, String message, String title, Icon icon -> OK_EXIT_CODE }
     }
 
     def userClicksNoInDeleteDialog() {
-        Messages.metaClass.'static'.showYesNoDialog = {Project project, String message, String title, Icon icon -> NOT_OK_EXIT_CODE}
+        Messages.metaClass.static.showYesNoDialog = { Project project, String message, String title, Icon icon -> NOT_OK_EXIT_CODE }
     }
 
     def equalsAndHashCodeExist() {
-        GenerateEqualsHelper.metaClass.'static'.findMethod = {PsiClass psiClass, MethodSignature methodSignature ->
+        GenerateEqualsHelper.metaClass.static.findMethod = { PsiClass psiClass, MethodSignature methodSignature ->
             if (methodSignature == equalsMethodSignature) {
                 equalsMethod
             } else {

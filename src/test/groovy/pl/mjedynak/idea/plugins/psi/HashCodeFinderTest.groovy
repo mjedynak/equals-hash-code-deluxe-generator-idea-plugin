@@ -13,11 +13,11 @@ class HashCodeFinderTest extends Specification {
     PsiType returnType = Mock()
 
     def setup() {
-        psiClass.findMethodsByName("hashCode", false) >> [method]
+        psiClass.findMethodsByName('hashCode', false) >> [method]
     }
 
     def "should determine that given class has correct 'hashCode' method"() {
-        psiClass.findMethodsByName("hashCode", false) >> [Mock(PsiMethodImpl), method]
+        psiClass.findMethodsByName('hashCode', false) >> [Mock(PsiMethodImpl), method]
         isPublic()
         returnsInt()
         hasNoParameters()
@@ -91,25 +91,25 @@ class HashCodeFinderTest extends Specification {
     }
 
     private void returnsInt() {
-        method.getReturnType() >> returnType
-        returnType.equalsToText("int") >> true
+        method.returnType >> returnType
+        returnType.equalsToText('int') >> true
     }
 
     private void returnsObject() {
-        method.getReturnType() >> returnType
-        returnType.equalsToText("Object") >> true
+        method.returnType >> returnType
+        returnType.equalsToText('Object') >> true
     }
 
     private void hasNoParameters() {
         PsiParameterList psiParameterList = Mock()
-        psiParameterList.getParameters() >> []
-        method.getParameterList() >> psiParameterList
+        psiParameterList.parameters >> []
+        method.parameterList >> psiParameterList
     }
 
     private void hasParameters() {
         PsiParameterList psiParameterList = Mock()
-        psiParameterList.getParameters() >> [Mock(PsiParameter)]
-        method.getParameterList() >> psiParameterList
+        psiParameterList.parameters >> [Mock(PsiParameter)]
+        method.parameterList >> psiParameterList
     }
 
 }

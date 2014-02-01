@@ -10,6 +10,7 @@ import pl.mjedynak.idea.plugins.psi.EqualsMethodFinder
 import pl.mjedynak.idea.plugins.psi.HashCodeMethodFinder
 import pl.mjedynak.idea.plugins.psi.ParentClassChecker
 
+@SuppressWarnings('UnnecessaryObjectReferences')
 class GenerateEqualsHashCodeDeluxeAction extends BaseGenerateAction {
 
     private static MutablePicoContainer picoContainer = new DefaultPicoContainer()
@@ -25,7 +26,7 @@ class GenerateEqualsHashCodeDeluxeAction extends BaseGenerateAction {
         picoContainer.registerComponentImplementation(TypeChooser)
         picoContainer.registerComponentImplementation(GenerateEqualsHashCodeDeluxeWizardFactory)
         picoContainer.registerComponentImplementation(GenerateEqualsHashCodeDeluxeActionHandler)
-        handler = picoContainer.getComponentInstanceOfType(GenerateEqualsHashCodeDeluxeActionHandler.class)
+        handler = picoContainer.getComponentInstanceOfType(GenerateEqualsHashCodeDeluxeActionHandler)
     }
 
 

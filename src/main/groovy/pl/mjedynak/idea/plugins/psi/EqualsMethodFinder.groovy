@@ -10,7 +10,7 @@ import groovy.transform.CompileStatic
 class EqualsMethodFinder implements MethodFinder {
 
     boolean hasMethod(PsiClass psiClass) {
-        psiClass.findMethodsByName("equals", false).any { PsiMethod method ->
+        psiClass.findMethodsByName('equals', false).any { PsiMethod method ->
             isPublic(method) && isNotStatic(method) && hasObjectAsParameter(method) && returnsBoolean(method)
         }
     }
@@ -20,7 +20,7 @@ class EqualsMethodFinder implements MethodFinder {
     }
 
     private static boolean returnsBoolean(PsiMethod method) {
-        method.returnType.equalsToText("boolean")
+        method.returnType.equalsToText('boolean')
     }
 
     private static boolean isPublic(PsiMethod method) {
@@ -28,6 +28,6 @@ class EqualsMethodFinder implements MethodFinder {
     }
 
     private static boolean hasObjectAsParameter(PsiMethod method) {
-        method.getParameterList()?.parameters?.size() == 1 && method.getParameterList().parameters[0].type.canonicalText == CommonClassNames.JAVA_LANG_OBJECT
+        method.parameterList?.parameters?.size() == 1 && method.parameterList.parameters[0].type.canonicalText == CommonClassNames.JAVA_LANG_OBJECT
     }
 }

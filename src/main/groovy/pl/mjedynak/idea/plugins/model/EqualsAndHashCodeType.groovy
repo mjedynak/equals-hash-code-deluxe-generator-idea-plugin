@@ -20,9 +20,12 @@ enum EqualsAndHashCodeType {
         this.hashCodeMethodName = hashCodeMethodName
     }
 
+    @SuppressWarnings('ConfusingMethodName')
     String equalsMethodName() {
         equalsMethodName
     }
+
+    @SuppressWarnings('ConfusingMethodName')
     String hashCodeMethodName() {
         hashCodeMethodName
     }

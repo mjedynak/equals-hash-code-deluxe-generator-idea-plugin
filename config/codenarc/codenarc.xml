@@ -9,7 +9,7 @@
     <ruleset-ref path='rulesets/concurrency.xml'/>
     <ruleset-ref path='rulesets/convention.xml'/>
     <ruleset-ref path='rulesets/design.xml'>
-        <exclude name='ReturnsNullInsteadOfEmptyArray'/>
+        <exclude name='PrivateFieldCouldBeFinal'/>
     </ruleset-ref>
     <ruleset-ref path='rulesets/dry.xml'/>
     <ruleset-ref path='rulesets/exceptions.xml'/>
@@ -24,15 +24,13 @@
 
     <ruleset-ref path='rulesets/naming.xml'>
         <exclude name='MethodName'/>
-        <exclude name='ConfusingMethodName'/>
         <exclude name='FactoryMethodName'/>
     </ruleset-ref>
     <ruleset-ref path='rulesets/serialization.xml'/>
-    <ruleset-ref path='rulesets/size.xml'/>
-    <ruleset-ref path='rulesets/unnecessary.xml'>
-        <exclude name='UnnecessaryDefInMethodDeclaration'/>
-        <exclude name='UnnecessaryPackageReference'/>
+    <ruleset-ref path='rulesets/size.xml'>
+        <exclude name='CrapMetric'/>
     </ruleset-ref>
+    <ruleset-ref path='rulesets/unnecessary.xml'/>
     <ruleset-ref path='rulesets/unused.xml'/>
 
 

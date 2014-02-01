@@ -18,16 +18,16 @@ class HashCodeGenerator {
 
     PsiMethod hashCodeMethod(@NotNull List<PsiField> hashCodePsiFields, PsiClass psiClass, String hashCodeMethodName) {
         StringBuilder methodText = new StringBuilder()
-        methodText << "@Override public int hashCode() {return "
+        methodText << '@Override public int hashCode() {return '
         PsiElementFactory factory = getFactory(psiClass)
-        if (!hashCodePsiFields.isEmpty()) {
+        if (hashCodePsiFields.empty) {
+            methodText << '0;}'
+        } else {
             String fieldsString = hashCodePsiFields*.name.join(',')
             if (parentClassChecker.hasClassWithOverriddenMethodInInheritanceHierarchy(hashCodeMethodFinder, psiClass)) {
                 methodText << '31 * super.hashCode() + '
             }
             methodText << "Objects.${hashCodeMethodName}(${fieldsString});}"
-        } else {
-            methodText << "0;}"
         }
         factory.createMethodFromText(methodText.toString(), null, LanguageLevel.JDK_1_6)
     }

@@ -58,6 +58,7 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
         OverrideImplementUtil.convert2GenerationInfos([hashCodeMethod, equalsMethod])
     }
 
+    @SuppressWarnings('ReturnsNullInsteadOfEmptyArray')
     @Override
     protected ClassMember[] chooseOriginalMembers(PsiClass aClass, Project project, Editor editor) {
         equalsFields = null

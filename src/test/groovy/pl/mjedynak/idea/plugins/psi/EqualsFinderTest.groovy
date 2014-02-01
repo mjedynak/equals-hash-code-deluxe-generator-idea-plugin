@@ -13,11 +13,11 @@ class EqualsFinderTest extends Specification {
     PsiType returnType = Mock()
 
     def setup() {
-        psiClass.findMethodsByName("equals", false) >> [method]
+        psiClass.findMethodsByName('equals', false) >> [method]
     }
 
     def "should determine that given class has correct 'equals' method"() {
-        psiClass.findMethodsByName("equals", false) >> [Mock(PsiMethodImpl), method]
+        psiClass.findMethodsByName('equals', false) >> [Mock(PsiMethodImpl), method]
         isPublic()
         returnsBoolean()
         hasObjectAsParameter()
@@ -112,26 +112,26 @@ class EqualsFinderTest extends Specification {
 
     private void hasParameter(String parameterType) {
         PsiParameter parameter = Mock()
-        parameter.getType() >> returnType
-        returnType.getCanonicalText() >> parameterType
+        parameter.type >> returnType
+        returnType.canonicalText >> parameterType
         PsiParameterList psiParameterList = Mock()
-        psiParameterList.getParameters() >> [parameter]
-        method.getParameterList() >> psiParameterList
+        psiParameterList.parameters >> [parameter]
+        method.parameterList >> psiParameterList
     }
 
     private void hasMoreThanOneParameter() {
         PsiParameterList psiParameterList = Mock()
-        psiParameterList.getParameters() >> [Mock(PsiParameter), Mock(PsiParameter)]
-        method.getParameterList() >> psiParameterList
+        psiParameterList.parameters >> [Mock(PsiParameter), Mock(PsiParameter)]
+        method.parameterList >> psiParameterList
     }
 
     private void returnsBoolean() {
-        method.getReturnType() >> returnType
-        returnType.equalsToText("boolean") >> true
+        method.returnType >> returnType
+        returnType.equalsToText('boolean') >> true
     }
 
     private void returnsObject() {
-        method.getReturnType() >> returnType
-        returnType.equalsToText("Object") >> true
+        method.returnType >> returnType
+        returnType.equalsToText('Object') >> true
     }
 }

@@ -13,7 +13,7 @@ class TypeChooserTest extends Specification {
     PsiClass psiClass = Mock()
 
     def "chooses Java7 when language level is at least 7"() {
-        PsiUtil.metaClass.'static'.isLanguageLevel7OrHigher = {PsiClass psiClass -> true}
+        PsiUtil.metaClass.'static'.isLanguageLevel7OrHigher = { PsiClass psiClass -> true }
 
         when:
         def result = typeChooser.chooseType(psiClass)
@@ -23,7 +23,7 @@ class TypeChooserTest extends Specification {
     }
 
     def "chooses guava  when language level is below 7"() {
-        PsiUtil.metaClass.'static'.isLanguageLevel7OrHigher = {PsiClass psiClass -> false}
+        PsiUtil.metaClass.'static'.isLanguageLevel7OrHigher = { PsiClass psiClass -> false }
 
         when:
         def result = typeChooser.chooseType(psiClass)
