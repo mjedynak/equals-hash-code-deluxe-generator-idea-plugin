@@ -1,7 +1,11 @@
 package pl.mjedynak.idea.plugins.generator
 
 import com.intellij.pom.java.LanguageLevel
-import com.intellij.psi.*
+import com.intellij.psi.JavaPsiFacade
+import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiElementFactory
+import com.intellij.psi.PsiField
+import com.intellij.psi.PsiMethod
 import org.jetbrains.annotations.NotNull
 import pl.mjedynak.idea.plugins.psi.HashCodeMethodFinder
 import pl.mjedynak.idea.plugins.psi.ParentClassChecker

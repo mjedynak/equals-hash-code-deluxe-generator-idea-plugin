@@ -1,6 +1,11 @@
 package pl.mjedynak.idea.plugins.psi
 
-import com.intellij.psi.*
+import com.intellij.psi.CommonClassNames
+import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiModifier
+import com.intellij.psi.PsiParameter
+import com.intellij.psi.PsiParameterList
+import com.intellij.psi.PsiType
 import com.intellij.psi.impl.source.PsiMethodImpl
 import spock.lang.Specification
 

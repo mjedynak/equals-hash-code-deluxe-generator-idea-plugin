@@ -171,7 +171,6 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         fieldsAreNotAssigned()
     }
 
-
     def "returns list with generated methods as list of GenerationInfo objects"() {
         actionHandler.type = JAVA_7
         equalsGenerator.equalsMethod(null, psiClass, JAVA_7.equalsMethodName()) >> equalsMethod
@@ -191,7 +190,6 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
         then:
         result == list
     }
-
 
     def fieldsAreAssigned() {
         actionHandler.equalsFields = [Mock(PsiField)]

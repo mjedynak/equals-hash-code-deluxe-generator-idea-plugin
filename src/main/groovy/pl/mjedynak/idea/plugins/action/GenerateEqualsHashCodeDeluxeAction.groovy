@@ -29,7 +29,6 @@ class GenerateEqualsHashCodeDeluxeAction extends BaseGenerateAction {
         handler = picoContainer.getComponentInstanceOfType(GenerateEqualsHashCodeDeluxeActionHandler)
     }
 
-
     protected GenerateEqualsHashCodeDeluxeAction() {
         super(handler)
     }

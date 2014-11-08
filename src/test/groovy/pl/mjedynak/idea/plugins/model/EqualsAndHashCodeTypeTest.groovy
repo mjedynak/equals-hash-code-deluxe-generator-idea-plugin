@@ -2,7 +2,12 @@ package pl.mjedynak.idea.plugins.model
 
 import spock.lang.Specification
 
-import static pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType.*
+import static pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType.GUAVA
+import static pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType.GUAVA_EQUALS_METHOD
+import static pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType.GUAVA_HASH_CODE_METHOD
+import static pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType.JAVA_7
+import static pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType.JAVA_7_EQUALS_METHOD
+import static pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType.JAVA_7_HASH_CODE_METHOD
 
 class EqualsAndHashCodeTypeTest extends Specification {
 

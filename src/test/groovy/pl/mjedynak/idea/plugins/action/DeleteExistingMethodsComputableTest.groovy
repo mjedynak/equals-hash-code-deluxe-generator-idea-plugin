@@ -33,7 +33,6 @@ class DeleteExistingMethodsComputableTest extends Specification {
         0 * hashCodeMethod._
     }
 
-
     def "returns false when IncorrectOperationException is thrown"() {
         equalsMethod.delete() >> { throw new IncorrectOperationException() }
 
@@ -43,8 +42,5 @@ class DeleteExistingMethodsComputableTest extends Specification {
         then:
         result == false
     }
-
-
-
 
 }

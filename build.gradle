@@ -5,8 +5,8 @@ apply plugin: 'idea'
 apply from: 'idea.gradle'
 
 // --- properties ---
-ext.ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 13.0'
-ext.ideaJdk = 'IDEA IC-133.193'
+ext.ideaInstallationPath = 'C:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 14.0'
+ext.ideaJdk = 'IDEA IC-135.475'
 sourceCompatibility = 1.6
 // --- properties ---
 
@@ -23,9 +23,16 @@ repositories {
 
 dependencies {
     compile fileTree(dir: ideaInstallationPath + '/lib', include: '*.jar')
-    compile 'org.codehaus.groovy:groovy-all:2.0.6'
-    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+    testCompile ('org.spockframework:spock-core:0.7-groovy-2.0') {
+		exclude group: 'org.codehaus.groovy'
+	}
     testCompile 'org.objenesis:objenesis:1.2'
 }
 
-metaInf << files('/META-INF/plugin.xml')
+jar {
+    metaInf {
+        from('/META-INF') {
+            include 'plugin.xml'
+        }
+    }
+}

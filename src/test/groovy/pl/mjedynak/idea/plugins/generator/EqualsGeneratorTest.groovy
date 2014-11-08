@@ -92,5 +92,4 @@ class EqualsGeneratorTest extends Specification {
         result == null
     }
 
-
 }

@@ -1,7 +1,12 @@
 package pl.mjedynak.idea.plugins.action
 
 import com.intellij.codeInsight.CodeInsightBundle
-import com.intellij.codeInsight.generation.*
+import com.intellij.codeInsight.generation.ClassMember
+import com.intellij.codeInsight.generation.GenerateEqualsHelper
+import com.intellij.codeInsight.generation.GenerateMembersHandlerBase
+import com.intellij.codeInsight.generation.GenerationInfo
+import com.intellij.codeInsight.generation.OverrideImplementUtil
+import com.intellij.codeInsight.generation.PsiElementClassMember
 import com.intellij.codeInsight.hint.HintManager
 import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
@@ -9,7 +14,11 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
-import com.intellij.psi.*
+import com.intellij.psi.PsiAnonymousClass
+import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiField
+import com.intellij.psi.PsiMethod
+import com.intellij.psi.PsiModifier
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.IncorrectOperationException
 import pl.mjedynak.idea.plugins.factory.GenerateEqualsHashCodeDeluxeWizardFactory
@@ -37,7 +46,6 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
 
     PsiField[] equalsFields = null
     PsiField[] hashCodeFields = null
-
 
     GenerateEqualsHashCodeDeluxeActionHandler(HashCodeGenerator hashCodeGenerator, EqualsGenerator equalsGenerator,
                                               GenerateEqualsHashCodeDeluxeWizardFactory factory, TypeChooser typeChooser) {
