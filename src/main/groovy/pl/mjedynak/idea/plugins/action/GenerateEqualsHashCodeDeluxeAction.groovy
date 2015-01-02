@@ -5,6 +5,7 @@ import org.picocontainer.MutablePicoContainer
 import org.picocontainer.defaults.DefaultPicoContainer
 import pl.mjedynak.idea.plugins.factory.GenerateEqualsHashCodeDeluxeWizardFactory
 import pl.mjedynak.idea.plugins.generator.EqualsGenerator
+import pl.mjedynak.idea.plugins.generator.EqualsMethodTextCreator
 import pl.mjedynak.idea.plugins.generator.HashCodeGenerator
 import pl.mjedynak.idea.plugins.psi.EqualsMethodFinder
 import pl.mjedynak.idea.plugins.psi.HashCodeMethodFinder
@@ -21,6 +22,7 @@ class GenerateEqualsHashCodeDeluxeAction extends BaseGenerateAction {
         picoContainer.registerComponentImplementation(EqualsMethodFinder)
         picoContainer.registerComponentImplementation(HashCodeMethodFinder)
         picoContainer.registerComponentImplementation(ParentClassChecker)
+        picoContainer.registerComponentImplementation(EqualsMethodTextCreator)
         picoContainer.registerComponentImplementation(HashCodeGenerator)
         picoContainer.registerComponentImplementation(EqualsGenerator)
         picoContainer.registerComponentImplementation(TypeChooser)

@@ -23,7 +23,7 @@ import pl.mjedynak.idea.plugins.generator.HashCodeGenerator
 import pl.mjedynak.idea.plugins.wizard.GenerateEqualsHashCodeDeluxeWizard
 import spock.lang.Specification
 
-import javax.swing.*
+import javax.swing.Icon
 
 import static pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType.JAVA_7
 
@@ -173,7 +173,7 @@ class GenerateEqualsHashCodeDeluxeActionHandlerTest extends Specification {
 
     def "returns list with generated methods as list of GenerationInfo objects"() {
         actionHandler.type = JAVA_7
-        equalsGenerator.equalsMethod(null, psiClass, JAVA_7.equalsMethodName()) >> equalsMethod
+        equalsGenerator.equalsMethod(null, psiClass, JAVA_7) >> equalsMethod
         hashCodeGenerator.hashCodeMethod(null, psiClass, JAVA_7.hashCodeMethodName()) >> hashCodeMethod
 
         def list = Mock(List)

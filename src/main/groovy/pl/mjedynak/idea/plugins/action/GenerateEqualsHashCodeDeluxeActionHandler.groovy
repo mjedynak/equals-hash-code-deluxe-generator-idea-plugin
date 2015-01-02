@@ -58,10 +58,9 @@ class GenerateEqualsHashCodeDeluxeActionHandler extends GenerateMembersHandlerBa
 
     @Override
     protected List<? extends GenerationInfo> generateMemberPrototypes(PsiClass psiClass, ClassMember[] originalMembers) throws IncorrectOperationException {
-        String equalsMethodName = type.equalsMethodName()
         String hashCodeMethodName = type.hashCodeMethodName()
         PsiMethod hashCodeMethod = hashCodeGenerator.hashCodeMethod(hashCodeFields as List, psiClass, hashCodeMethodName)
-        PsiMethod equalsMethod = equalsGenerator.equalsMethod(equalsFields as List, psiClass, equalsMethodName)
+        PsiMethod equalsMethod = equalsGenerator.equalsMethod(equalsFields as List, psiClass, type)
 
         OverrideImplementUtil.convert2GenerationInfos([hashCodeMethod, equalsMethod])
     }

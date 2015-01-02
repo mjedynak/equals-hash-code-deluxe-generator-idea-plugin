@@ -9,9 +9,14 @@
       </ul>
       ]]>
     </description>
-    <version>1.0.10-SNAPSHOT</version>
+    <version>1.0.10</version>
     <change-notes>
         <![CDATA[
+           version 1.0.10
+           <br/>
+           <ul>
+           <li><a href="https://github.com/mjedynak/EqualsHashCodeDeluxeGenerator/issues/15">Added comparing arrays using Objects.deepEquals or Arrays.equals</a></li>
+           </ul>
            version 1.0.9
            <br/>
            <ul>

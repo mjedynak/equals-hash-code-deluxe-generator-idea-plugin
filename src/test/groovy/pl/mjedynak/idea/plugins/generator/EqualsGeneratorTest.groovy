@@ -1,92 +1,47 @@
 package pl.mjedynak.idea.plugins.generator
 
 import com.intellij.openapi.project.Project
-import com.intellij.pom.java.LanguageLevel
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiField
 import com.intellij.psi.impl.PsiElementFactoryImpl
 import com.intellij.psi.impl.source.PsiMethodImpl
-import pl.mjedynak.idea.plugins.psi.EqualsMethodFinder
-import pl.mjedynak.idea.plugins.psi.ParentClassChecker
+import pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType
 import spock.lang.Specification
+
+import static com.intellij.pom.java.LanguageLevel.JDK_1_6
 
 class EqualsGeneratorTest extends Specification {
 
-    ParentClassChecker parentClassChecker = Mock()
-    EqualsMethodFinder finder = Mock()
-    EqualsGenerator equalsGenerator = new EqualsGenerator(parentClassChecker, finder)
-    PsiField psiField = Mock()
-    PsiField psiField2 = Mock()
+    EqualsMethodTextCreator equalsMethodTextCreator = Mock()
+    EqualsGenerator equalsGenerator = new EqualsGenerator(equalsMethodTextCreator)
     JavaPsiFacade javaPsiFacade = Mock()
     PsiElementFactoryImpl elementFactory = Mock()
-    PsiMethodImpl psiMethod = Mock()
     PsiClass psiClass = Mock()
-    String type = 'String'
+    PsiField psiField = Mock()
+    PsiMethodImpl psiMethod = Mock()
+    EqualsAndHashCodeType equalsAndHashCodeType = EqualsAndHashCodeType.JAVA_7
 
     def setup() {
         JavaPsiFacade.metaClass.static.getInstance = { Project project -> javaPsiFacade }
         javaPsiFacade.elementFactory >> elementFactory
-        psiClass.name >> type
-        psiClass.extendsListTypes >> []
     }
 
-    def "creates equals method for one field"() {
-        String fieldName = 'field'
-        psiField.name >> fieldName
-        String equalsMethodName = 'equals'
-
-        elementFactory.createMethodFromText('@Override public boolean equals(Object obj) { if (this == obj) {return true;} ' +
-                'if (obj == null || getClass() != obj.getClass()) {return false;} ' +
-                'final String other = (String) obj; return Objects.equals(this.field, other.field);}', null, LanguageLevel.JDK_1_6) >> psiMethod
+    def "creates equals method based on text"() {
+        String methodText = 'methodText'
+        equalsMethodTextCreator.createMethodText([psiField], psiClass, equalsAndHashCodeType) >> methodText
+        elementFactory.createMethodFromText(methodText, null, JDK_1_6) >> psiMethod
 
         when:
-        def result = equalsGenerator.equalsMethod([psiField], psiClass, equalsMethodName)
+        def result = equalsGenerator.equalsMethod([psiField], psiClass, equalsAndHashCodeType)
 
         then:
         result == psiMethod
     }
 
-    def "creates equals method with super call when parent class checker says so"() {
-        String fieldName = 'field'
-        psiField.name >> fieldName
-        String equalsMethodName = 'equals'
-        parentClassChecker.hasClassWithOverriddenMethodInInheritanceHierarchy(finder, psiClass) >> true
-
-        elementFactory.createMethodFromText('@Override public boolean equals(Object obj) { if (this == obj) {return true;} ' +
-                'if (obj == null || getClass() != obj.getClass()) {return false;} ' +
-                'if (!super.equals(obj)) {return false;} ' +
-                'final String other = (String) obj; return Objects.equals(this.field, other.field);}', null, LanguageLevel.JDK_1_6) >> psiMethod
-
+    def "returns null if psi fields list is empty"() {
         when:
-        def result = equalsGenerator.equalsMethod([psiField], psiClass, equalsMethodName)
-
-        then:
-        result == psiMethod
-    }
-
-    def "creates equals method for two fields"() {
-        String fieldName = 'field'
-        String fieldName2 = 'anotherField'
-        psiField.name >> fieldName
-        psiField2.name >> fieldName2
-        String equalsMethodName = 'equal'
-
-        elementFactory.createMethodFromText('@Override public boolean equals(Object obj) { if (this == obj) {return true;} ' +
-                'if (obj == null || getClass() != obj.getClass()) {return false;} ' +
-                'final String other = (String) obj; return Objects.equal(this.field, other.field) && Objects.equal(this.anotherField, other.anotherField);}',
-                null, LanguageLevel.JDK_1_6) >> psiMethod
-
-        when:
-        def result = equalsGenerator.equalsMethod([psiField, psiField2], psiClass, equalsMethodName)
-
-        then:
-        result == psiMethod
-    }
-
-    def "returns null if list is empty"() {
-        when:
-        def result = equalsGenerator.equalsMethod([], psiClass, 'anyString')
+        def result = equalsGenerator.equalsMethod([], psiClass, equalsAndHashCodeType)
 
         then:
         result == null
