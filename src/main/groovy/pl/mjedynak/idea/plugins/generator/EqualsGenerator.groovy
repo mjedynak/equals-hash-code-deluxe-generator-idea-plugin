@@ -6,9 +6,11 @@ import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElementFactory
 import com.intellij.psi.PsiField
 import com.intellij.psi.PsiMethod
+import groovy.transform.TypeChecked
 import org.jetbrains.annotations.NotNull
 import pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType
 
+@TypeChecked
 class EqualsGenerator {
 
     private EqualsMethodTextCreator equalsMethodTextCreator

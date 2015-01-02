@@ -6,10 +6,12 @@ import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElementFactory
 import com.intellij.psi.PsiField
 import com.intellij.psi.PsiMethod
+import groovy.transform.TypeChecked
 import org.jetbrains.annotations.NotNull
 import pl.mjedynak.idea.plugins.psi.HashCodeMethodFinder
 import pl.mjedynak.idea.plugins.psi.ParentClassChecker
 
+@TypeChecked
 class HashCodeGenerator {
 
     private ParentClassChecker parentClassChecker

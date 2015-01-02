@@ -3,11 +3,13 @@ package pl.mjedynak.idea.plugins.generator
 import com.intellij.psi.PsiArrayType
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiField
+import groovy.transform.CompileStatic
 import org.jetbrains.annotations.NotNull
 import pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType
 import pl.mjedynak.idea.plugins.psi.EqualsMethodFinder
 import pl.mjedynak.idea.plugins.psi.ParentClassChecker
 
+@CompileStatic
 class EqualsMethodTextCreator {
 
     private ParentClassChecker parentClassChecker
@@ -28,7 +30,7 @@ class EqualsMethodTextCreator {
         }
         methodText << " final ${psiClass.name} other = (${psiClass.name}) obj;"
         methodText << ' return '
-        equalsPsiFields.eachWithIndex { field, index ->
+        equalsPsiFields.eachWithIndex { PsiField field, int index ->
             if (isArray(field)) {
                 methodText << "${equalsAndHashCodeType.arrayComparisonMethodName()}(this.${field.name}, other.${field.name})"
             } else {

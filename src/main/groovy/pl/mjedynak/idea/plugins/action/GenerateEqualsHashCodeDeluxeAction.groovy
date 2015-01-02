@@ -1,6 +1,7 @@
 package pl.mjedynak.idea.plugins.action
 
 import com.intellij.codeInsight.generation.actions.BaseGenerateAction
+import groovy.transform.CompileStatic
 import org.picocontainer.MutablePicoContainer
 import org.picocontainer.defaults.DefaultPicoContainer
 import pl.mjedynak.idea.plugins.factory.GenerateEqualsHashCodeDeluxeWizardFactory
@@ -12,6 +13,7 @@ import pl.mjedynak.idea.plugins.psi.HashCodeMethodFinder
 import pl.mjedynak.idea.plugins.psi.ParentClassChecker
 
 @SuppressWarnings('UnnecessaryObjectReferences')
+@CompileStatic
 class GenerateEqualsHashCodeDeluxeAction extends BaseGenerateAction {
 
     private static MutablePicoContainer picoContainer = new DefaultPicoContainer()
@@ -28,7 +30,7 @@ class GenerateEqualsHashCodeDeluxeAction extends BaseGenerateAction {
         picoContainer.registerComponentImplementation(TypeChooser)
         picoContainer.registerComponentImplementation(GenerateEqualsHashCodeDeluxeWizardFactory)
         picoContainer.registerComponentImplementation(GenerateEqualsHashCodeDeluxeActionHandler)
-        handler = picoContainer.getComponentInstanceOfType(GenerateEqualsHashCodeDeluxeActionHandler)
+        handler = (GenerateEqualsHashCodeDeluxeActionHandler) picoContainer.getComponentInstanceOfType(GenerateEqualsHashCodeDeluxeActionHandler)
     }
 
     protected GenerateEqualsHashCodeDeluxeAction() {
