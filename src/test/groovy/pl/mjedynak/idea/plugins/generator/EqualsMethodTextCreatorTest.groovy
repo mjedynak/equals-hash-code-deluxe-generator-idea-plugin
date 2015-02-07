@@ -71,6 +71,6 @@ class EqualsMethodTextCreatorTest extends Specification {
         then:
         result == '@Override public boolean equals(Object obj) { if (this == obj) {return true;} ' +
                 'if (obj == null || getClass() != obj.getClass()) {return false;} ' +
-                'final Object other = (Object) obj; return Objects.equals(this.field, other.field) && Objects.equals(this.anotherField, other.anotherField);}'
+                'final Object other = (Object) obj; return Objects.equals(this.field, other.field)\n && Objects.equals(this.anotherField, other.anotherField);}'
     }
 }

@@ -4,7 +4,6 @@ import com.intellij.psi.PsiArrayType
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiField
 import groovy.transform.CompileStatic
-import org.jetbrains.annotations.NotNull
 import pl.mjedynak.idea.plugins.model.EqualsAndHashCodeType
 import pl.mjedynak.idea.plugins.psi.EqualsMethodFinder
 import pl.mjedynak.idea.plugins.psi.ParentClassChecker
@@ -31,13 +30,13 @@ class EqualsMethodTextCreator {
         methodText << " final ${psiClass.name} other = (${psiClass.name}) obj;"
         methodText << ' return '
         equalsPsiFields.eachWithIndex { PsiField field, int index ->
+            if (isNotFirstField(index)) {
+                methodText << '\n && '
+            }
             if (isArray(field)) {
                 methodText << "${equalsAndHashCodeType.arrayComparisonMethodName()}(this.${field.name}, other.${field.name})"
             } else {
                 methodText << "Objects.${equalsAndHashCodeType.equalsMethodName()}(this.${field.name}, other.${field.name})"
-            }
-            if (isNotLastField(equalsPsiFields, index)) {
-                methodText << ' && '
             }
         }
         methodText << ';}'
@@ -48,7 +47,7 @@ class EqualsMethodTextCreator {
         field.type instanceof PsiArrayType
     }
 
-    private boolean isNotLastField(@NotNull List<PsiField> equalsPsiFields, int index) {
-        index < equalsPsiFields.size() - 1
+    private boolean isNotFirstField(int index) {
+        index > 0
     }
 }
