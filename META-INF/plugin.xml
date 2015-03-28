@@ -9,9 +9,14 @@
       </ul>
       ]]>
     </description>
-    <version>1.0.11</version>
+    <version>1.0.12</version>
     <change-notes>
         <![CDATA[
+           version 1.0.12
+           <br/>
+           <ul>
+           <li><a href="https://github.com/mjedynak/EqualsHashCodeDeluxeGenerator/issues/21">Fixed incompatibility with IntelliJ 14.1</a></li>
+           </ul>
            version 1.0.11
            <br/>
            <ul>

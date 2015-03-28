@@ -278,7 +278,7 @@ public class GenerateEqualsHashCodeDeluxeWizard extends AbstractWizard {
                 if (!(memberInfo.getMember() instanceof PsiField))
                     return CodeInsightBundle.message("generate.equals.hashcode.internal.error");
                 final PsiType type = ((PsiField) memberInfo.getMember()).getType();
-                if (GenerateEqualsHelper.isNestedArray(type)) {
+                if (isNestedArray(type)) {
                     return CodeInsightBundle.message("generate.equals.warning.equals.for.nested.arrays.not.supported");
                 }
                 if (GenerateEqualsHelper.isArrayOfObjects(type)) {
@@ -291,7 +291,7 @@ public class GenerateEqualsHashCodeDeluxeWizard extends AbstractWizard {
         public boolean isMemberEnabled(MemberInfo member) {
             if (!(member.getMember() instanceof PsiField)) return false;
             final PsiType type = ((PsiField) member.getMember()).getType();
-            return !GenerateEqualsHelper.isNestedArray(type);
+            return !isNestedArray(type);
         }
 
         public boolean isCheckedWhenDisabled(MemberInfo member) {
@@ -313,7 +313,7 @@ public class GenerateEqualsHashCodeDeluxeWizard extends AbstractWizard {
         public int checkForProblems(@NotNull MemberInfo member) {
             if (!(member.getMember() instanceof PsiField)) return ERROR;
             final PsiType type = ((PsiField) member.getMember()).getType();
-            if (GenerateEqualsHelper.isNestedArray(type)) return ERROR;
+            if (isNestedArray(type)) return ERROR;
             if (GenerateEqualsHelper.isArrayOfObjects(type)) return WARNING;
             return OK;
         }
@@ -368,6 +368,15 @@ public class GenerateEqualsHashCodeDeluxeWizard extends AbstractWizard {
 
         public String getTooltipText(MemberInfo member) {
             return myTooltipManager.getTooltip(member);
+        }
+    }
+
+    private static boolean isNestedArray(PsiType aType) {
+        if(!(aType instanceof PsiArrayType)) {
+            return false;
+        } else {
+            PsiType componentType = ((PsiArrayType)aType).getComponentType();
+            return componentType instanceof PsiArrayType;
         }
     }
 }
