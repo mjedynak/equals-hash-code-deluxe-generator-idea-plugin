@@ -1,1 +1,2 @@
-IntelliJ Idea plugin for generating equals/hashCode using guava or Java7 Objects class
+IntelliJ Idea plugin for generating equals/hashCode using Guava or Java7 Objects class.
+Usage: ALT + INSERT -> equals() and hashCode() deluxe (inside Java Editor).
